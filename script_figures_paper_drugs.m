@@ -200,115 +200,115 @@ writetable(aux_tab_bad, table_all_protein_excel)
 %% P3. Reaction fluxes analysis 
 % Uncomment this part if you have been provided with the original CRC-CRN
 % data.
-folder_data = './data';
-file_mim = fullfile(folder_data, 'CRC_CRN.mat');
-file_ris_drug = fullfile(folder_results, ...
-        sprintf('results_drug_on_mut_%s_alpha_%2.2f.mat', ...
-        mut_prot,0.75));
-    
-% Protein(s) of interest
-all_proteins = {'Ras', 'Ras_GTP'}; n_prot = numel(all_proteins);
-
-% Load
-%   - Model 
-load(file_mim, 'CMIM');
-species_names = CMIM.species.names;
-species_names{CMIM.matrix.ind_one} = ' ';
-
-%   - Dynamics
-load(file_ris_drug, 'ris_drug')
-time = ris_drug.time_mut_drug;
-x_t = ris_drug.x_t_mut_drug; n_t = size(x_t, 2);
-x_t(CMIM.matrix.ind_one, :) = ones(1, n_t);
-rate_const = ris_drug.rate_constants_mut_drug;
-
-f_summary = figure('units','normalized','outerposition',[0 0 0.5 1]);
-
-for ip = 1:n_prot
-
-    protein = all_proteins{ip};
-    fprintf('******  Dealing with %s   ****** \n', protein)
-
-%% Step 2. Find reactions in which the protein is involved
-    [~, idx_protein] = ismember(protein, CMIM.species.names);
-    b_complex_reactions = CMIM.matrix.B(CMIM.matrix.Z(idx_protein, :)~=0 , :);
-    idx_reactions = [];
-    for ir = 1:size(b_complex_reactions, 1)
-        idx_reactions = [idx_reactions, find(b_complex_reactions(ir, :))];
-    end
-
-%% Step 3. Compute flux rates
-    % 3.a. Read variables
-    reactions2flux_rates = CMIM.reactions.reactions2flux_rates(idx_reactions);
-
-    v = CMIM.matrix.v(idx_reactions, :);
-    rate_const_eval = rate_const(v(:,1));
-    species1_eval = x_t(v(:,2), :);
-    species2_eval = x_t(v(:,3), :);
-    S_prot = CMIM.matrix.S(idx_protein, idx_reactions)';
-
-    % 3.b. Compute fluxes
-    fluxes = S_prot .* rate_const_eval .* species1_eval .* species2_eval;
-    fluxes_names = cell(numel(idx_reactions), 1);
-    for i_f = 1:numel(idx_reactions)
-       fluxes_names{i_f} = sprintf('%d %s    %s   %s', ...
-           S_prot(i_f) , CMIM.rates.alias{v(i_f, 1)}, ...
-           species_names{v(i_f, 2)},  species_names{v(i_f, 3)});
-    end
-
-    % 3.c. Compute flux rates
-    [tmp, ~, tmp_idx] = unique(reactions2flux_rates);
-    fluxes_rates = zeros(numel(tmp), n_t);
-    fluxes_rates_name = cell(numel(tmp), 1);
-    for i_f = 1:numel(tmp)
-        fluxes_rates(i_f, :) = sum(fluxes(tmp_idx == i_f, :), 1);
-        aux_fl = find(tmp_idx == i_f);
-        if numel(aux_fl) == 1
-            fluxes_rates_name{i_f} = fluxes_names{aux_fl};
-        else
-            fluxes_rates_name{i_f} = sprintf('%s + %s', ...
-                fluxes_names{aux_fl(1)}, fluxes_names{aux_fl(2)});
-        end
-    end
-    
-    switch protein
-        case 'Ras'
-            idx_fl = [1, 2];
-            aux_title = 'a) Ras';
-            aux_lgd = {'$V_1$', '$V_2$', '$\dot{x_{Ras}}$'};
-        otherwise 
-            idx_fl = [5, 6];
-            aux_title = 'b) Ras\_GTP'; 
-            aux_lgd = {'$V_3$', '$V_4$', '$\dot{x_{Ras\_GTP}}$'};
-    end
-    figure(f_summary)
-    subplot(2, 1, ip)
-    for i_f = 1:numel(idx_fl)
-        aux_i_f = idx_fl(i_f);
-        semilogx(time, fluxes_rates(aux_i_f, :), 'Linewidth', 3, ...
-            'Displayname', aux_lgd{i_f})
-        hold on
-    end
-    tmp_flux = fluxes_rates; tmp_flux(idx_fl, :) = [];
-    tmp_sum = sum(tmp_flux, 1);
-    semilogx(time, tmp_sum, 'Linewidth', 3, ...
-            'Displayname', 'Others')
-    sum_all = sum(fluxes_rates, 1);
-    semilogx(time, sum_all, 'k--', 'Linewidth', 3, ...
-            'Displayname', aux_lgd{3})
-    lgd = legend('show');
-    set(lgd, 'Interpreter', 'Latex', 'Fontsize', 18)
-    grid on
-    xlim([time(2), time(end)])
-    
-    ylabel('Reaction fluxes')
-    
-    if ip == 2
-        xlabel('Time [AU]')
-    end
-
-    ax = gca; ax.FontSize = 20;
-end
-
-saveas(f_summary, ...
-    fullfile(folder_figures, 'flux_rates_Ras_Ras_GTP.png'))
+% folder_data = './data';
+% file_mim = fullfile(folder_data, 'CRC_CRN.mat');
+% file_ris_drug = fullfile(folder_results, ...
+%         sprintf('results_drug_on_mut_%s_alpha_%2.2f.mat', ...
+%         mut_prot,0.75));
+%     
+% % Protein(s) of interest
+% all_proteins = {'Ras', 'Ras_GTP'}; n_prot = numel(all_proteins);
+% 
+% % Load
+% %   - Model 
+% load(file_mim, 'CMIM');
+% species_names = CMIM.species.names;
+% species_names{CMIM.matrix.ind_one} = ' ';
+% 
+% %   - Dynamics
+% load(file_ris_drug, 'ris_drug')
+% time = ris_drug.time_mut_drug;
+% x_t = ris_drug.x_t_mut_drug; n_t = size(x_t, 2);
+% x_t(CMIM.matrix.ind_one, :) = ones(1, n_t);
+% rate_const = ris_drug.rate_constants_mut_drug;
+% 
+% f_summary = figure('units','normalized','outerposition',[0 0 0.5 1]);
+% 
+% for ip = 1:n_prot
+% 
+%     protein = all_proteins{ip};
+%     fprintf('******  Dealing with %s   ****** \n', protein)
+% 
+% %% Step 2. Find reactions in which the protein is involved
+%     [~, idx_protein] = ismember(protein, CMIM.species.names);
+%     b_complex_reactions = CMIM.matrix.B(CMIM.matrix.Z(idx_protein, :)~=0 , :);
+%     idx_reactions = [];
+%     for ir = 1:size(b_complex_reactions, 1)
+%         idx_reactions = [idx_reactions, find(b_complex_reactions(ir, :))];
+%     end
+% 
+% %% Step 3. Compute flux rates
+%     % 3.a. Read variables
+%     reactions2flux_rates = CMIM.reactions.reactions2flux_rates(idx_reactions);
+% 
+%     v = CMIM.matrix.v(idx_reactions, :);
+%     rate_const_eval = rate_const(v(:,1));
+%     species1_eval = x_t(v(:,2), :);
+%     species2_eval = x_t(v(:,3), :);
+%     S_prot = CMIM.matrix.S(idx_protein, idx_reactions)';
+% 
+%     % 3.b. Compute fluxes
+%     fluxes = S_prot .* rate_const_eval .* species1_eval .* species2_eval;
+%     fluxes_names = cell(numel(idx_reactions), 1);
+%     for i_f = 1:numel(idx_reactions)
+%        fluxes_names{i_f} = sprintf('%d %s    %s   %s', ...
+%            S_prot(i_f) , CMIM.rates.alias{v(i_f, 1)}, ...
+%            species_names{v(i_f, 2)},  species_names{v(i_f, 3)});
+%     end
+% 
+%     % 3.c. Compute flux rates
+%     [tmp, ~, tmp_idx] = unique(reactions2flux_rates);
+%     fluxes_rates = zeros(numel(tmp), n_t);
+%     fluxes_rates_name = cell(numel(tmp), 1);
+%     for i_f = 1:numel(tmp)
+%         fluxes_rates(i_f, :) = sum(fluxes(tmp_idx == i_f, :), 1);
+%         aux_fl = find(tmp_idx == i_f);
+%         if numel(aux_fl) == 1
+%             fluxes_rates_name{i_f} = fluxes_names{aux_fl};
+%         else
+%             fluxes_rates_name{i_f} = sprintf('%s + %s', ...
+%                 fluxes_names{aux_fl(1)}, fluxes_names{aux_fl(2)});
+%         end
+%     end
+%     
+%     switch protein
+%         case 'Ras'
+%             idx_fl = [1, 2];
+%             aux_title = 'a) Ras';
+%             aux_lgd = {'$V_1$', '$V_2$', '$\dot{x_{Ras}}$'};
+%         otherwise 
+%             idx_fl = [5, 6];
+%             aux_title = 'b) Ras\_GTP'; 
+%             aux_lgd = {'$V_3$', '$V_4$', '$\dot{x_{Ras\_GTP}}$'};
+%     end
+%     figure(f_summary)
+%     subplot(2, 1, ip)
+%     for i_f = 1:numel(idx_fl)
+%         aux_i_f = idx_fl(i_f);
+%         semilogx(time, fluxes_rates(aux_i_f, :), 'Linewidth', 3, ...
+%             'Displayname', aux_lgd{i_f})
+%         hold on
+%     end
+%     tmp_flux = fluxes_rates; tmp_flux(idx_fl, :) = [];
+%     tmp_sum = sum(tmp_flux, 1);
+%     semilogx(time, tmp_sum, 'Linewidth', 3, ...
+%             'Displayname', 'Others')
+%     sum_all = sum(fluxes_rates, 1);
+%     semilogx(time, sum_all, 'k--', 'Linewidth', 3, ...
+%             'Displayname', aux_lgd{3})
+%     lgd = legend('show');
+%     set(lgd, 'Interpreter', 'Latex', 'Fontsize', 18)
+%     grid on
+%     xlim([time(2), time(end)])
+%     
+%     ylabel('Reaction fluxes')
+%     
+%     if ip == 2
+%         xlabel('Time [AU]')
+%     end
+% 
+%     ax = gca; ax.FontSize = 20;
+% end
+% 
+% saveas(f_summary, ...
+%     fullfile(folder_figures, 'flux_rates_Ras_Ras_GTP.png'))
