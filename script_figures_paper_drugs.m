@@ -4,7 +4,7 @@ close all
 
 %% 
 % This code allows to reproduce the figures on the effect of the action of 
-% a drug on the CRC-CRN affected by a gain of function mutation of KRAS 
+% a Dabrafenib on the CRC-CRN affected by a gain of function mutation of KRAS
 % presented in the paper
 %
 % 'Computational quantification of global effects induced by mutations and 
@@ -171,7 +171,7 @@ hold on
 end
 plot(1:n_species_no_drug, delta_mut_sort, 'k', 'Linewidth', 3, ...
     'Displayname', 'GoF Ras') 
-symlog('y')
+my_symlog('y')
 xlabel('Proteins $i$', 'Fontsize', 20, 'Interpreter', 'Latex')
 ylabel('$\delta_i$ (sorted)', 'Fontsize', 20, 'Interpreter', 'Latex')
 set(gca, 'TickLabelInterpreter','latex', 'Fontsize', 20)
@@ -275,11 +275,11 @@ writetable(aux_tab_bad, table_all_protein_excel)
 %         case 'Ras'
 %             idx_fl = [1, 2];
 %             aux_title = 'a) Ras';
-%             aux_lgd = {'$V_1$', '$V_2$', '$\dot{x_{Ras}}$'};
+%             aux_lgd = {'$V_1$', '$V_2$', '$\dot{x}_{Ras}$'};
 %         otherwise 
 %             idx_fl = [5, 6];
 %             aux_title = 'b) Ras\_GTP'; 
-%             aux_lgd = {'$V_3$', '$V_4$', '$\dot{x_{Ras\_GTP}}$'};
+%             aux_lgd = {'$V_3$', '$V_4$', '$\dot{x}_{Ras\_GTP}$'};
 %     end
 %     figure(f_summary)
 %     subplot(2, 1, ip)

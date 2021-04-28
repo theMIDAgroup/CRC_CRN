@@ -104,7 +104,7 @@ for ip = 1:numel(all_proteins)
     subplot(numel(all_proteins), 1, ip)
     plot(delta, 'Linewidth', 3.5, 'color', [14, 77, 146]./256)
     
-    symlog('y')
+    my_symlog('y')
    
     xlim([0, n_species])
     if ip == 1
