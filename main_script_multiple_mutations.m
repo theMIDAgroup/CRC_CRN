@@ -2,18 +2,17 @@ clc
 clear
 close all
 
+% NOTE: Run main_script_single_mutation.m first to compute the values of the 
+% protein concentrations in the physiological network.
+
 %% Step 1. Define input data
 % 1.1. Data 
 target_folder = './data';
 file_mim = fullfile(target_folder, 'CRC_CRN.mat');
-% Data are available upon reasonable request to Dr. Sara Sommariva
-% (sommariva at dima.unige.it)
 
 % 1.2. Others results
 folder_results = fullfile('.', './results');
 file_ris_phys = fullfile(folder_results, 'results_physiological.mat');
-    % Run main_script_single_mutation.m first to compute the values of the 
-    % protein concentrations in the physiological network.
 
 % 1.3. Add necessary folders to path
 addpath('./funcs')
@@ -31,7 +30,7 @@ load(file_mim, 'CMIM');
 load(file_ris_phys, 'ris_phys')
 
 initial_condition = ris_phys.x_eq; % Starting from the equilibrium 
-                                          % in the physiological cell
+                                   % in the physiological cell
 initial_rate_constants = CMIM.rates.std_values;
 
 for ic = 1:numel(all_combo)

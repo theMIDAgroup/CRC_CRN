@@ -6,8 +6,6 @@ close all
 % 1.1. Data 
 target_folder = './data';
 file_mim = fullfile(target_folder, 'CRC_CRN.mat');
-% Data are available upon reasonable request to Dr. Sara Sommariva
-% (sommariva at dima.unige.it)
 
 % 1.2. Other files and folders
 folder_results = fullfile('.', 'results');

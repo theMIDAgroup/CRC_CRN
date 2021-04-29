@@ -10,8 +10,6 @@ close all
 % 1.1. Data
 target_folder = './data';
 file_mim = fullfile(target_folder, 'CRC_CRN.mat');
-% Data are available upon reasonable request to Dr. Sara Sommariva
-% (sommariva at dima.unige.it)
 
 % 1.2. Starting mutation 
 mut_prot = 'Ras';
@@ -25,7 +23,7 @@ max_t = 5*10^7;
 perc_all = [0]; % Level of the mutation
 perc_clt = [1, 0.75, 0.5, 0.25]; % Drug initial concentration (defined as
                   % function of the constant aggregate concentration within
-                  % Braf conservation law=
+                  % Braf conservation law)
 
 %% Step 2. Load and store data
 load(file_mim, 'CMIM');
