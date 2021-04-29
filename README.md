@@ -9,11 +9,10 @@ The code allows to reproduce the results shown in
 # Usage:
 
 Code is written in Matlab R2015b.
-The data of the model used in the paper are available upon reasonable request to Dr Sara Sommariva (sommariva at dima.unige.it).
 Results of the simulations are provided in the folder './results'.
 
 Run script_fig_\*.m to reproduce the figures of the paper. 
-If you have been provided with the data run main_script_\*.m to reproduce the results.
+Run main_script_\*.m to reproduce the results of the paper.
 
 # External packages:
 
