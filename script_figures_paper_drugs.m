@@ -145,7 +145,7 @@ for is = 1:numel(idx_p2)
     set(gca, 'Fontsize', 20)
     xlim([aux_time(2), aux_time(end)])
     if is == numel(idx_p2) || is == numel(idx_p2)  - 1
-        xlabel('Time [AU]', 'FontSize', 20)
+        xlabel('Time [s]', 'FontSize', 20)
     end
     xticks([10^(-5) 10^0 10^4])
     xticklabels({'10^{-5}','10^0','10^4'})
@@ -302,7 +302,7 @@ for ip = 1:n_prot
     ylabel('Reaction fluxes')
     
     if ip == 2
-        xlabel('Time [AU]')
+        xlabel('Time [s]')
     end
 
     ax = gca; ax.FontSize = 20;
