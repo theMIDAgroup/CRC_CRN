@@ -29,7 +29,7 @@ perc_clt = [0.25, 0.5, 0.75, 1.0]; % Drug initial concentration (defined as
                   % Braf conservation law
 n_p = numel(perc_all); n_d = numel(perc_clt);
 
-% 1.2. File and folders
+% 1.2. Files and folders
 folder_results = './results';
 folder_figures = './figures';
 file_species_names = fullfile(folder_results, 'CRC_CRN_species_names.mat');
@@ -95,7 +95,7 @@ for is = 1:numel(idx_p1)
     aux_is = idx_p1(is);
     
     for id = 1:n_d
-        aux_time = time_dynamics{ip, id} /3600;
+        aux_time = time_dynamics{ip, id};
         semilogx(aux_time, dynamics{ip, id}(aux_is, :), ...
             'Linewidth', 3, ...
             'Displayname', sprintf('$\\alpha = %1.2f$',perc_clt(id)))
@@ -110,8 +110,7 @@ for is = 1:numel(idx_p1)
     set(lgd, 'Fontsize', 25)
     xlim([aux_time(2), aux_time(end)])
 
-    xticks([10^(-5) 10^0 10^4])
-    xticklabels({'10^{-5}','10^0','10^4'})
+    xticks([10^-4, 10^0 10^4, 10^7])
 
     hL = subplot(numel(idx_p1), 2, 2*is);
     poshL = get(hL, 'position');
@@ -133,7 +132,7 @@ for is = 1:numel(idx_p2)
     aux_is = idx_p2(is);
     
     for id = 1:n_d
-        aux_time = time_dynamics{ip, id} /3600;
+        aux_time = time_dynamics{ip, id};
         semilogx(aux_time, dynamics{ip, id}(aux_is, :), ...
             'Linewidth', 3)
         hold on
@@ -147,8 +146,7 @@ for is = 1:numel(idx_p2)
     if is == numel(idx_p2) || is == numel(idx_p2)  - 1
         xlabel('Time [s]', 'FontSize', 20)
     end
-    xticks([10^(-5) 10^0 10^4])
-    xticklabels({'10^{-5}','10^0','10^4'})
+    xticks([10^-4, 10^0 10^4, 10^7])
 
 end
 set(gcf, 'PaperPositionMode', 'auto');
@@ -298,6 +296,7 @@ for ip = 1:n_prot
     set(lgd, 'Interpreter', 'Latex', 'Fontsize', 18)
     grid on
     xlim([time(2), time(end)])
+    xticks([10^-4, 10^0 10^4, 10^7])
     
     ylabel('Reaction fluxes')
     
