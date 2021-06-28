@@ -11,6 +11,8 @@ close all
 target_folder = './data';
 file_mim = fullfile(target_folder, 'CRC_CRN.mat');
 
+addpath(fullfile('./funcs'))
+
 % 1.2. Starting mutation 
 mut_prot = 'Ras';
 target_prot = 'Raf';
