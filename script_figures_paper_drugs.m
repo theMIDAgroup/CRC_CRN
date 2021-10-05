@@ -106,7 +106,7 @@ for is = 1:numel(idx_p1)
     grid on
     ylabel(sprintf('%s [nM]', set_p1_name{is}), 'Fontsize', 20)
     lgd = legend('show');
-    set(gca, 'Fontsize', 20)
+    set(gca, 'TickLabelInterpreter','latex', 'Fontsize', 20)
     set(lgd, 'Fontsize', 25)
     xlim([aux_time(2), aux_time(end)])
 
@@ -123,7 +123,7 @@ for is = 1:numel(idx_p1)
    
 end
 set(gcf, 'PaperPositionMode', 'auto');
-saveas(f_dyn_p1, fullfile(folder_figures, 'Effect_drug_Ras.png'))
+saveas(f_dyn_p1, fullfile(folder_figures, 'Effect_drug_Ras.tiff'))
 
 
 f_dyn_p2 = figure('units','normalized','outerposition',[0 0 0.6 1]);
@@ -141,7 +141,7 @@ for is = 1:numel(idx_p2)
        'k--', 'Linewidth', 3, 'Displayname', 'phys')
     grid on
     ylabel(sprintf('%s [nM]', set_p2_name{is}), 'Fontsize', 20)
-    set(gca, 'Fontsize', 20)
+    set(gca, 'TickLabelInterpreter','latex', 'Fontsize', 20)
     xlim([aux_time(2), aux_time(end)])
     if is == numel(idx_p2) || is == numel(idx_p2)  - 1
         xlabel('Time [s]', 'FontSize', 20)
@@ -150,7 +150,7 @@ for is = 1:numel(idx_p2)
 
 end
 set(gcf, 'PaperPositionMode', 'auto');
-saveas(f_dyn_p2, fullfile(folder_figures, 'Effect_drug_MAPK_cascade.png'))
+saveas(f_dyn_p2, fullfile(folder_figures, 'Effect_drug_MAPK_cascade.tiff'))
 
 %% P2. Profile of all the concentrations
 markers = {'s--', 'd--', '*--', 'o--'};
@@ -293,7 +293,7 @@ for ip = 1:n_prot
     semilogx(time, sum_all, 'k--', 'Linewidth', 3, ...
             'Displayname', aux_lgd{3})
     lgd = legend('show');
-    set(lgd, 'Interpreter', 'Latex', 'Fontsize', 18)
+    set(lgd, 'Interpreter', 'Latex', 'Fontsize', 22)
     grid on
     xlim([time(2), time(end)])
     xticks([10^-4, 10^0 10^4, 10^7])
@@ -302,10 +302,11 @@ for ip = 1:n_prot
     
     if ip == 2
         xlabel('Time [s]')
+        ylim([-14, 20])
     end
 
     ax = gca; ax.FontSize = 20;
 end
 
 saveas(f_summary, ...
-    fullfile(folder_figures, 'flux_rates_Ras_Ras_GTP.png'))
+    fullfile(folder_figures, 'flux_rates_Ras_Ras_GTP.svg'))
