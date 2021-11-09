@@ -4,7 +4,7 @@ Matlab code for evaluating the effects of two classes of mutations in a chemical
 
 The code allows to reproduce the results shown in 
 
-* Sommariva, S., Caviglia, G., Ravera, S., Frassoni, F., Benvenuto, F., Tortolina, L., Castagnino, N., Parodi, S., Piana, M.,  Computational quantification of global effects induced by mutations and drugs in signaling networks of colorectal cancer cells. preprint
+* Sommariva, S., Caviglia, G., Ravera, S., Frassoni, F., Benvenuto, F., Tortolina, L., Castagnino, N., Parodi, S., Piana, M.,  Computational quantification of global effects induced by mutations and drugs in signaling networks of colorectal cancer cells. Scientific reports 11(1), 1-13
 
 # Usage:
 
