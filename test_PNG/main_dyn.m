@@ -2,17 +2,20 @@ clc
 clear
 close all
 
-%% TODO. 
-% 1. Generare in codice separato i punti iniziali x_0
+addpath(fullfile('..', 'funcs'))
 
-do_phys = 0;
+do_phys = 1;
 do_mutation = 1;
 
 %% Step1. Define path and load
 target = fullfile('..', 'data');
+folder_results = './results';
 
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat'); % Network
-load(path_mim, 'new_CMIM'); CRN = new_CMIM; 
+load(path_mim, 'new_CMIM'); CRN = new_CMIM;
+
+file_x0_phys = fullfile(folder_results, 'x0_phys.mat');
+aux_file_x0_mut = 'x0_%s.mat';
 
 %% Step 2. Define general parameters of the network
 x0_phys = CRN.species.std_initial_values;
@@ -30,8 +33,7 @@ n_mutations = numel(all_mutations);
 if do_phys
 
 % 3.1. Load initial condition
-path_x0 = 'png_phys_test1.mat'; % Initial conditions
-load(path_x0, 'x0_all');
+load(file_x0_phys, 'x0_all');
 n_runs = size(x0_all, 2);
 
 % 3.2. Solve the system for all the defined initial conditions
@@ -52,9 +54,9 @@ for ir = 1:n_runs
 end
 
 % 3.3. Save results
-save('dyn_phys_test1.mat', 'dyn_phys', 'x0_all')
+save('dyn_phys.mat', 'dyn_phys', 'x0_all')
 
-clear x0_all dyn_phys
+clear x0_all dyn_phys n_runs
  
 end
 
@@ -65,12 +67,10 @@ for im = 1:n_mutations
     protein = all_mutations{im};
 
 % 4.1. Define the mutated network 
-    [~, rates_mut] = f_define_mutated_condition(protein, ...
-                                           x0_phys, rates_phys, CRN, perc);
-
-% 4.2. Load initial condition
-    path_x0 = sprintf('png_mut_%s_test1.mat', protein); % Initial conditions
-    load(path_x0, 'x0_all');
+    file_x0_mut = fullfile(folder_results, sprintf(aux_file_x0_mut, proteins));
+    load(file_x0_mut, 'x0_all', 'par');
+    rho_mut = par.rho_mut;
+    rates_mut = par.rates_mut;
     n_runs = size(x0_all, 2);
     
 % 4.3. Solve the system for all the defined initial conditions
@@ -91,9 +91,9 @@ for im = 1:n_mutations
     end
     
 % 4.4. Save results
-    save(sprintf('dyn_mut_%s_test1.mat', protein), 'dyn_mut')
+    save(sprintf('dyn_mut_%s.mat', protein), 'dyn_mut')
     
-    clear protein rates_mut x0_all dyn_mut
+    clear protein rates_mut x0_all dyn_mut par
     
 end
 end
