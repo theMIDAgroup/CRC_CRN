@@ -1,10 +1,14 @@
+% Lanciamo la dinamica a partire dai punti iniziali selezionati con
+% main_extract_x0.m e salvati in '/results'. 
+
+
 clc
 clear
 close all
 
 addpath(fullfile('..', 'funcs'))
 
-do_phys = 1;
+do_phys = 0;
 do_mutation = 1;
 
 %% Step1. Define path and load
@@ -24,7 +28,7 @@ max_t = 2.5*10^7;
 perc = 0;
 
 lof_mutations = {'TBRII', 'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF'};
-gof_mutations = {'Raf', 'Ras', 'PI3K', 'BetaCatenin'};
+gof_mutations = { 'Ras', 'PI3K', 'BetaCatenin'}; % {'Raf',
 lof_mutations_type2 = {'TP53'};
 all_mutations = [gof_mutations, lof_mutations, lof_mutations_type2];
 n_mutations = numel(all_mutations);
@@ -67,7 +71,7 @@ for im = 1:n_mutations
     protein = all_mutations{im};
 
 % 4.1. Define the mutated network 
-    file_x0_mut = fullfile(folder_results, sprintf(aux_file_x0_mut, proteins));
+    file_x0_mut = fullfile(folder_results, sprintf(aux_file_x0_mut, protein));
     load(file_x0_mut, 'x0_all', 'par');
     rho_mut = par.rho_mut;
     rates_mut = par.rates_mut;
@@ -91,7 +95,8 @@ for im = 1:n_mutations
     end
     
 % 4.4. Save results
-    save(sprintf('dyn_mut_%s.mat', protein), 'dyn_mut')
+    save(fullfile(folder_results, ...
+        sprintf('dyn_mut_%s.mat', protein)), 'dyn_mut')
     
     clear protein rates_mut x0_all dyn_mut par
     

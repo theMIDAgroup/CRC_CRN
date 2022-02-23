@@ -1,3 +1,12 @@
+% Lavoriamo su superfici stechiometriche diverse, quella corrispondente 
+% allo stato fisiologico e altre relative a particolari mutazioni.
+% Su ognuna di queste superfici, selezioniamo 50 punti.
+% Le mutazioni considerate sono le seguenti:
+% Loss of Function: {'TBRII', 'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF'}
+% Gain of Function: {'Raf', 'Ras', 'PI3K', 'BetaCatenin'}
+% Loss of Function (tipo2): {'TP53'}.
+
+
 clc
 clear
 close 
@@ -37,6 +46,7 @@ rho_phys = Nl*CRN.species.std_initial_values;
 
 % 3.2. Draw intial points
 x0_all = zeros(n_species, n_runs);
+toll_cond_init_point = 10^17;
 for ir = 1:n_runs
     aux_cond = Inf; 
     while aux_cond > toll_cond_init_point

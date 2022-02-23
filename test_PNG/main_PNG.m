@@ -4,7 +4,7 @@ clc
 
 addpath(fullfile('..', 'funcs'))
 
-do_phys = 1;
+do_phys = 0;
 do_mutation = 1; perc = 0;
 
 %% Step1. Define path and load
@@ -28,8 +28,8 @@ toll_cond_init_point = 10^17; % This should be the same inside f_PNG_restart
 
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
 
-lof_mutations = {'TBRII', 'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF'};
-gof_mutations = {'Raf', 'Ras', 'PI3K', 'BetaCatenin'};
+lof_mutations = {'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF', 'TBRII'};
+gof_mutations = {'Ras', 'PI3K', 'BetaCatenin', 'Raf'};
 lof_mutations_type2 = {'TP53'};
 all_mutations = [gof_mutations, lof_mutations, lof_mutations_type2];
 n_mutations = numel(all_mutations);
@@ -76,7 +76,7 @@ for im = 1:n_mutations
     protein = all_mutations{im};
     
     % 4.1. Load parameters of mutated network and initial points
-    file_x0_mut = fullfile(folder_results, sprintf(aux_file_x0_mut, proteins));
+    file_x0_mut = fullfile(folder_results, sprintf(aux_file_x0_mut, protein));
     load(file_x0_mut, 'x0_all', 'par');
     rho_mut = par.rho_mut;
     rates_mut = par.rates_mut;
@@ -94,7 +94,8 @@ for im = 1:n_mutations
     end
 
     % 4.4. Save
-    save(sprintf('png_mut_%s.mat', protein), 'png_mut', 'x0_all')
+    save(fullfile(folder_results, ...
+        sprintf('png_mut_%s.mat', protein)), 'png_mut', 'x0_all')
 
     clear protein png_mut x0_all rates_mut rho_mut par n_runs
 
@@ -103,52 +104,53 @@ end
 end
 
 %% Step 5. Check results (physiological)
-% path_results_dyn = fullfile('..', 'results');
-% 
-% file_phys = fullfile(path_results_dyn, 'results_physiological.mat');
-% load(file_phys, 'ris_phys')
-% ir = 1; 
-% delta = (png_phys(ir).x  - ris_phys.x_eq(1:end-2)) ./ ris_phys.x_eq(1:end-2);
-% figure
-% plot(delta)
+path_results_dyn = fullfile('..', 'results');
+
+file_phys = fullfile(path_results_dyn, 'results_physiological.mat');
+load(file_phys, 'ris_phys')
+load('png_phys');
+ir = 1; 
+delta = (png_phys(ir).x  - ris_phys.x_eq(1:end-2)) ./ ris_phys.x_eq(1:end-2);
+figure
+plot(delta)
 
 %% Step 6. Check results (mutation)
-% protein = 'BetaCatenin';
-% ir = 1; % Run of PNG to be consider
-% 
-% path_results_dyn = fullfile('..', 'results');
-% 
-% file_dyn = fullfile('..', 'results', ...
-%     sprintf('results_mutation_%s_perc_0.0.mat', protein));
-% file_png = fullfile(sprintf('png_mut_%s_test1.mat', protein));
-% file_dyn_phys = fullfile('..', 'results', ...
-%     'results_physiological.mat');
-% file_png_phys = fullfile('png_phys_test1.mat');
-% 
-% load(file_dyn, 'ris_mutated')
-% load(file_png, 'png_mut')
-% load(file_dyn_phys, 'ris_phys')
-% load(file_png_phys, 'png_phys')
-% 
-% x_eq_png = png_mut(ir).x;
-% x_eq_dyn_1 = ris_mutated.x_mut_eq(1:n_species);
-% x_eq_dyn_2 = ris_mutated.x_xemut_eq(1:n_species);
-% x_eq_phys_dyn = ris_phys.x_eq(1:n_species);
-% x_eq_phys = png_phys(1).x;
-% 
-% delta_png = (x_eq_png - x_eq_phys) ./ x_eq_phys;
-% delta_dyn_1 = (x_eq_dyn_1 - x_eq_phys_dyn) ./ x_eq_phys_dyn;
-% delta_dyn_2 = (x_eq_dyn_2 - x_eq_phys) ./ x_eq_phys;
-% 
-% figure
-% subplot(2, 1, 1)
-% plot(delta_png, 'k', 'linewidth', 2)
-% hold on
-% plot(delta_dyn_1, 'r--', 'linewidth', 1.5)
-% symlog('y')
-% 
-% subplot(2, 1, 2)
-% plot(delta_png, 'k', 'linewidth', 2)
-% hold on
-% plot(delta_dyn_2, 'r--', 'linewidth', 1.5)
-% symlog('y')
+protein = 'BetaCatenin';
+ir = 1; % Run of PNG to be consider
+
+path_results_dyn = fullfile('..', 'results');
+
+file_dyn = fullfile('..', 'results', ...
+    sprintf('results_mutation_%s_perc_0.0.mat', protein));
+file_png = fullfile(sprintf('png_mut_%s_test1.mat', protein));
+file_dyn_phys = fullfile('..', 'results', ...
+    'results_physiological.mat');
+file_png_phys = fullfile('png_phys_test1.mat');
+
+load(file_dyn, 'ris_mutated')
+load(file_png, 'png_mut')
+load(file_dyn_phys, 'ris_phys')
+load(file_png_phys, 'png_phys')
+
+x_eq_png = png_mut(ir).x;
+x_eq_dyn_1 = ris_mutated.x_mut_eq(1:n_species);
+x_eq_dyn_2 = ris_mutated.x_xemut_eq(1:n_species);
+x_eq_phys_dyn = ris_phys.x_eq(1:n_species);
+x_eq_phys = png_phys(1).x;
+
+delta_png = (x_eq_png - x_eq_phys) ./ x_eq_phys;
+delta_dyn_1 = (x_eq_dyn_1 - x_eq_phys_dyn) ./ x_eq_phys_dyn;
+delta_dyn_2 = (x_eq_dyn_2 - x_eq_phys) ./ x_eq_phys;
+
+figure
+subplot(2, 1, 1)
+plot(delta_png, 'k', 'linewidth', 2)
+hold on
+plot(delta_dyn_1, 'r--', 'linewidth', 1.5)
+symlog('y')
+
+subplot(2, 1, 2)
+plot(delta_png, 'k', 'linewidth', 2)
+hold on
+plot(delta_dyn_2, 'r--', 'linewidth', 1.5)
+symlog('y')
