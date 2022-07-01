@@ -1,26 +1,26 @@
 function  ris = f_PNG_restart(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
     v, ind_one, max_counter)
 
+
 %% TODO:
 % 1. Il calcolo/salvataggio di alcune variabili potrebbe essere reso 
 %    opzionale
 
-% Input:
-% - S
-% - idx_basic_species
-% - x_0
-
-% The function 'newtonGD_restart' takes the following inputs:
-% - 'MIM' is a struct that contains all cell's features (in a physiological or mutated state)
-% - 'ris_dynamic' is a struct that contains the results obtained working on the
-% same cell, but using the dynamic approach
-% - 'num_run' is an integer that indicates how many experiments we want to
-% do on the same stoichiometric matrix
+% The function 'f_PNG_restart' takes the following inputs:
+% - 'x0' is the starting point for the algorithm
+% - 'S' 'Nl', 'rho', 'idx_basic_species', 'ind_one', 'v' are some data about
+% the stoichiometric surface we're working on and colorectal cell's features
+% (in a physiological or mutated state)
 % - 'max_counter' is an integer that indicates how many iterations we want
 % the algorithm to do every time we choose a new starting point
 
+% The function returns the equilibrium computed through the PNG algorithm
+% (with a maximum number of iterations equal to max_counter) combined with
+% the non-projector, having x0 as initial condition and working with
+% the MIM defined by rate_constants, S, Nl, rho, idx_basic_species, v, ind_one.
+
 %% Step 1. Define additional parameters within PNG
-toll_cond_init_point = 10^17;
+toll_cond_init_point = 10^28;%10^17;
 tol = 1e-12; 
 poss_alpha = logspace(0, -2, 20);
 poss_alpha_2 = logspace(3, -1, 40);
@@ -106,12 +106,19 @@ while ir < num_try
                 det_F_x(counter) = det(J_x);
 %                 fprintf('Iteration %d - f(x) = %2.3e  \n', ...
 %                     counter, norm_F_x_nm(counter));
+                
+                %Num condizionamento dello jacobiano
+                cond_number(counter) = cond(J_x); 
+                rcond_number(counter) = rcond(J_x); 
+                upd_components(counter) = n_species - sum(xnew==x);
+                zeri(counter) = sum(xnew==0);
+
             end
 
 % ******************* Projected Gradient Descent **************************
         else 
         
-%             disp('********************************************************************************')
+            disp('********************************************************************************')
 
             delta = - J_x' * F_x;
             delta_vers = delta / norm(delta);
@@ -145,15 +152,33 @@ while ir < num_try
 %         fprintf('Iteration %d - f(x) = %2.3e  ia = %d \n', ...
 %             counter, norm_F_x_nm(counter), is);        
         
+        %Num condizionamento dello jacobiano
+        zeri(counter) = sum(xnew==0);
+        cond_number(counter) = cond(J_x); 
+        rcond_number(counter) = rcond(J_x); 
+        upd_components(counter) = n_species - sum(xnew==x);
+        
         end 
+        disp("Iteration n. " + counter);
+        disp(sprintf("Norma di F(x): ||F(x)|| = %d ", norm_F_x_new));
     end
+
+%     figure; 
+%     semilogy(cond_number,'-o');
+%     figure;
+%     plot(upd_components);
 
 % 5.c. Store results (for plotting)
 x_res = xnew;
 
 % Restart if convergence hasn't been reached
 if (counter == max_counter+1) && (norm_F_x_new > tol)
+    ris.cond_number(ir).n = cond_number;
+    ris.rcond_number(ir).n = rcond_number;
+    ris.upd_components(ir).n = upd_components;
+    ris.zeri(ir).n = zeri;
     ir = ir+1; 
+    clear upd_components cond_number zeri
 else
     % Step 6. Store results over run
     ris.x0 = x_0;
@@ -162,7 +187,12 @@ else
     ris.step_lengths = step_lengths(1:counter);
     ris.norm_F = norm_F_x_nm(counter);
     ris.num_trials = ir;
+    ris.upd_components(ir).n = upd_components;
+    ris.cond_number(ir).n = cond_number;
+    ris.rcond_number(ir).n = rcond_number;
+    ris.zeri(ir).n = zeri;
     ir = num_try + 1;
+    clear upd_components cond_number zeri rcond_number
 end
 
 
