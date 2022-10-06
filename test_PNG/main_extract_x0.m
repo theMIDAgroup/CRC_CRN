@@ -1,11 +1,11 @@
-% Lavoriamo su superfici stechiometriche diverse, quella corrispondente 
-% allo stato fisiologico e altre relative a particolari mutazioni.
-% Su ognuna di queste superfici, selezioniamo 50 punti.
-% Le mutazioni considerate sono le seguenti:
+% Here we work on different stoichiometric surfaces: the one corresponding to
+% the physiological status and others related to specific mutations.
+% On each one of these surfaces, we select 50 points.
+% Considered mutations are the following:
 % Loss of Function: {'TBRII', 'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF'}
 % Gain of Function: {'Raf', 'Ras', 'PI3K', 'BetaCatenin'}
 % Loss of Function (tipo2): {'TP53'}.
-
+% Computed points saved in 'results/x0_phys.mat'
 
 clc
 clear
@@ -25,9 +25,16 @@ perc = 0;
 
 % 1.b. Define CRN path and load
 target = fullfile('..', 'data');
-folder_results = './results';
-path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
-load(path_mim, 'new_CMIM'); CRN = new_CMIM;
+
+%MIM AML
+path_mim = fullfile(target, 'AML_CRN.mat');
+load(path_mim, 'CMIM'); CRN = CMIM;
+folder_results = '../results/AML';
+
+%MIM CRC
+%folder_results = './results';
+%path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
+%load(path_mim, 'new_CMIM'); CRN = new_CMIM;
 
 %% Step 2. Define general parameters of the network
 v = CRN.matrix.v;
@@ -46,7 +53,7 @@ rho_phys = Nl*CRN.species.std_initial_values;
 
 % 3.2. Draw intial points
 x0_all = zeros(n_species, n_runs);
-toll_cond_init_point = 10^17;
+toll_cond_init_point = 10^17;%10^28;%
 for ir = 1:n_runs
     aux_cond = Inf; 
     while aux_cond > toll_cond_init_point
@@ -57,7 +64,7 @@ for ir = 1:n_runs
     x0_all(:, ir) = aux;
 end
 
-save(fullfile(folder_results, 'x0_phys.mat'), 'x0_all')
+save(fullfile(folder_results, 'x0_phys_aml.mat'), 'x0_all')
 
 clear x0_all
 

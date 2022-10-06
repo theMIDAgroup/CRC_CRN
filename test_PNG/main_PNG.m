@@ -2,18 +2,36 @@ clear
 close all
 clc
 
+% Here we use the PNG method for computing equilibrium points on the physiological
+% stoichiometric surface, using our non-projector (to make a comparison between
+% using the latter or the orthogonal projector).
+% Starting points: x0_all selected with 'main_extract_x0.m'.
+% Function used for the simulation: 'f_PNG_restart'.
+% PHYSIOLOGICAL CASE: results in results/'png_phys_testproj.mat'
+% MUTATED CASES: results in results/'png_mut_protein.mat', where
+% 'protein' represents the mutation considered in each situation.
+
 addpath(fullfile('..', 'funcs'))
 
-do_phys = 0;
+do_phys = 1;
 do_mutation = 1; perc = 0;
 
 %% Step1. Define path and load
 target = fullfile('..', 'data');
-folder_results = './results';
+
+
+%MIM CRC
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
 load(path_mim, 'new_CMIM'); CRN = new_CMIM;
-
+folder_results = './results';
 file_x0_phys = fullfile(folder_results, 'x0_phys.mat');
+
+%MIM AML
+% path_mim = fullfile(target, 'AML_CRN.mat');
+% load(path_mim, 'CMIM'); CRN = CMIM;
+% folder_results = '../results/AML';
+% file_x0_phys_aml = fullfile(folder_results, 'x0_phys_aml.mat');
+
 aux_file_x0_mut = 'x0_%s.mat';
 
 %% Step 2. Define general parameters of the network
@@ -43,7 +61,11 @@ S_phys = CRN.matrix.S;
 rho_phys = Nl*CRN.species.std_initial_values;
 
 % 3.2. Load initial points
+% PER AML
+% load(file_x0_phys_aml, 'x0_all');
+% PER CRC
 load(file_x0_phys, 'x0_all');
+
 n_runs = size(x0_all, 2);
 
 % 3.3. Run algorithm
@@ -58,9 +80,14 @@ for ir = 1:n_runs
 end
 
 % 3.4. Save
-save('png_phys.mat', 'png_phys')
 
-clear png_phys x0_all rates_phys S_phys rho_phys n_runs
+%PER TEST PROIETTORI
+save(fullfile(folder_results, 'nuovi/png_phys_testproj.mat'), 'png_phys');
+
+%PER AML
+%save(fullfile(folder_results, 'png_phys_aml.mat'), 'png_phys_aml');
+
+clear png_phys_aml x0_all rates_phys S_phys rho_phys n_runs
 
 end
 %% Step 4. Run PNG on the network of mutated cells
@@ -95,7 +122,7 @@ for im = 1:n_mutations
 
     % 4.4. Save
     save(fullfile(folder_results, ...
-        sprintf('png_mut_%s.mat', protein)), 'png_mut', 'x0_all')
+        sprintf('nuovi/png_mut_%s.mat', protein)), 'png_mut', 'x0_all')
 
     clear protein png_mut x0_all rates_mut rho_mut par n_runs
 
