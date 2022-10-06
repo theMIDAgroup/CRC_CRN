@@ -286,7 +286,7 @@ for g = 1:num_groups
             % no fill box
             h.bx(k,g) = line([Xx(:,1)' Xx(1,:) Xx(:,2)' Xx(2,:)],...
                 [Yy(:,1)' Yy(1,:) Yy(:,2)' Yy(2,:)],...
-                'color',confs.colors(g,:),'LineWidth',1.5); 
+                'color',confs.colors(g,:),'LineWidth',2); 
             hold on;        
             
             % draw the median

@@ -24,7 +24,7 @@ target = fullfile('..', 'data');
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
 load(path_mim, 'new_CMIM'); CRN = new_CMIM;
 folder_results = './results';
-file_x0_phys = fullfile(folder_results, 'x0_phys.mat');
+file_x0_phys = fullfile(folder_results, 'starting_points/x0_phys.mat');
 
 %MIM AML
 % path_mim = fullfile(target, 'AML_CRN.mat');
@@ -32,7 +32,7 @@ file_x0_phys = fullfile(folder_results, 'x0_phys.mat');
 % folder_results = '../results/AML';
 % file_x0_phys_aml = fullfile(folder_results, 'x0_phys_aml.mat');
 
-aux_file_x0_mut = 'x0_%s.mat';
+aux_file_x0_mut = 'starting_points/x0_%s.mat';
 
 %% Step 2. Define general parameters of the network
 v = CRN.matrix.v;
@@ -46,7 +46,7 @@ toll_cond_init_point = 10^17; % This should be the same inside f_PNG_restart
 
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
 
-lof_mutations = {'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF', 'TBRII'};
+lof_mutations = {'SMAD4','Cadh', 'APC','PTEN', 'AKT', 'ARF', 'TBRII'};  
 gof_mutations = {'Ras', 'PI3K', 'BetaCatenin', 'Raf'};
 lof_mutations_type2 = {'TP53'};
 all_mutations = [gof_mutations, lof_mutations, lof_mutations_type2];
@@ -81,8 +81,14 @@ end
 
 % 3.4. Save
 
+%PER PAPER
+save(fullfile(folder_results, 'png_phys_new.mat'), 'png_phys');
+
+%PER TEST GRADIENT RELATED
+%save(fullfile(folder_results, 'nuovi/gr_new2_16.mat'), 'png_phys');
+
 %PER TEST PROIETTORI
-save(fullfile(folder_results, 'nuovi/png_phys_testproj.mat'), 'png_phys');
+%save(fullfile(folder_results, 'nuovi/png_phys_testproj.mat'), 'png_phys');
 
 %PER AML
 %save(fullfile(folder_results, 'png_phys_aml.mat'), 'png_phys_aml');
@@ -122,7 +128,7 @@ for im = 1:n_mutations
 
     % 4.4. Save
     save(fullfile(folder_results, ...
-        sprintf('nuovi/png_mut_%s.mat', protein)), 'png_mut', 'x0_all')
+        sprintf('png_mut_new_%s.mat', protein)), 'png_mut', 'x0_all')
 
     clear protein png_mut x0_all rates_mut rho_mut par n_runs
 
