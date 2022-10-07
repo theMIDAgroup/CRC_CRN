@@ -20,7 +20,7 @@ function  ris = f_PNG_restart(x_0, rate_constants, S, Nl, rho, idx_basic_species
 % the MIM defined by rate_constants, S, Nl, rho, idx_basic_species, v, ind_one.
 
 %% Step 1. Define additional parameters within PNG
-toll_cond_init_point = 10^28;%10^17;
+toll_cond_init_point = 10^17;
 tol = 1e-12; 
 %poss_alpha_old = logspace(0, -2, 20);
 %poss_alpha_2_old = logspace(3, -1, 40);
@@ -125,7 +125,7 @@ while ir < num_try
 % ******************* Projected Gradient Descent **************************
         else 
         
-            disp('********************************************************************************')
+%             disp('********************************************************************************')
 
             delta = - J_x' * F_x;  % delta = - gradiente
             delta_vers = delta / norm(delta);
@@ -165,8 +165,8 @@ while ir < num_try
         norm_F_x_nm(counter) = norm_F_x_new;
         step_lengths(counter) = alpha;
         det_F_x(counter) = det(J_x);
-         fprintf('Iteration %d - f(x) = %2.3e  ia = %d \n', ...
-             counter, norm_F_x_nm(counter), is);        
+%          fprintf('Iteration %d - f(x) = %2.3e  ia = %d \n', ...
+%              counter, norm_F_x_nm(counter), is);        
         
         %Num condizionamento dello jacobiano
         zeri(counter) = sum(xnew==0);
@@ -175,8 +175,8 @@ while ir < num_try
         upd_components(counter) = n_species - sum(xnew==x);
         
         end 
-        disp("Iteration n. " + counter);
-        disp(sprintf("Norma di F(x): ||F(x)|| = %d ", norm_F_x_new));
+%         disp("Iteration n. " + counter);
+%         disp(sprintf("Norma di F(x): ||F(x)|| = %d ", norm_F_x_new));
     end
 
 %     figure; 
