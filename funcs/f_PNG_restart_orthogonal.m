@@ -21,8 +21,15 @@ function  ris = f_PNG_restart_orthogonal(x_0, rate_constants, S, Nl, rho, idx_ba
 %% Step 1. Define additional parameters within PNG
 toll_cond_init_point = 10^17;
 tol = 1e-12; 
-poss_alpha = logspace(0, -2, 20);
-poss_alpha_2 = logspace(3, -1, 40); %%%
+%poss_alpha_old = logspace(0, -2, 20);
+%poss_alpha_2_old = logspace(3, -1, 40);
+poss_alpha_2 = ones(1,40);
+poss_alpha_2(2) = 0.79;
+for i=3:length(poss_alpha_2)
+    poss_alpha_2(i) = poss_alpha_2(i-1) * poss_alpha_2(2);
+end
+poss_alpha = poss_alpha_2(1:20); 
+poss_alpha_2 = poss_alpha_2 * 1e3;
 sigma = 10^-4;
 sigma_2 = 10^-4;
 FLAG = 0;
@@ -126,14 +133,25 @@ while ir < num_try
             while ia < numel(poss_alpha_2)
                 alpha = poss_alpha_2(ia);
                 xnew = x + alpha * delta_vers;
+                xnew_nonP = xnew; %
+                ind_xnew_out = (xnew<0); %
+                ind_xnew_in = (xnew >= 0); %
                 xnew(xnew<0) = 0;
                 F_x_new = f_evaluate_mim(rate_constants, xnew, ...
                     idx_basic_species, Nl, rho, S, v, ind_one);
                 norm_F_x_new = norm(F_x_new);
                 theta_x = 0.5 * norm_F_x^2;
                 theta_x_new = 0.5 * norm_F_x_new^2;
-                if theta_x_new <= theta_x + sigma_2 * (-delta_vers)' * (xnew - x)
-                    is = ia;
+                norm_F_x_new = norm(F_x_new);
+                theta_x = 0.5 * norm_F_x^2;
+                theta_x_new = 0.5 * norm_F_x_new^2;
+                diff_P_xnew = abs(x - xnew_nonP); %
+                diff_P_xnew_M = diff_P_xnew(ind_xnew_in); %
+                diff_P_xnew_N = x(ind_xnew_out); %
+                if ((theta_x_new <= theta_x + sigma_2 * (-delta_vers)' * (xnew - x)) && (norm(diff_P_xnew_M) >= norm(diff_P_xnew_N)))
+                
+                %if theta_x_new <= theta_x + sigma_2 * (-delta_vers)' * (xnew - x)
+                %    is = ia;
                     ia = numel(poss_alpha_2);
                     FLAG = 0;
                     norm_grad(j) = norm(delta);
@@ -160,7 +178,7 @@ while ir < num_try
         disp(sprintf("Norma di F(x): ||F(x)|| = %d ", norm_F_x_new));
         end 
     end
-%     
+    
 %       figure;
 %       semilogy(cond_number,'-o');
 %       figure;
