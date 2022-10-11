@@ -13,8 +13,8 @@ clc
 
 addpath(fullfile('..', 'funcs'))
 
-do_phys = 1;
-do_mutation = 0; perc = 0;
+do_phys = 0;
+do_mutation = 1; perc = 0;
 
 %% Step1. Define path and load
 target = fullfile('..', 'data');
@@ -71,16 +71,13 @@ end
 % 3.4. Save
 
 %PER PAPER
-save(fullfile(folder_results, 'png_phys_or.mat'), 'png_phys');
+save(fullfile(folder_results, 'png_phys_last.mat'), 'png_phys');
 
 %PER TEST GRADIENT RELATED
 %save(fullfile(folder_results, 'nuovi/gr_new2_16.mat'), 'png_phys');
 
 %PER TEST PROIETTORI
 %save(fullfile(folder_results, 'nuovi/png_phys_testproj.mat'), 'png_phys');
-
-%PER AML
-%save(fullfile(folder_results, 'png_phys_aml.mat'), 'png_phys_aml');
 
 clear png_phys_aml x0_all rates_phys S_phys rho_phys n_runs
 
@@ -117,7 +114,7 @@ for im = 1:n_mutations
 
     % 4.4. Save
     save(fullfile(folder_results, ...
-        sprintf('png_mut_new_%s.mat', protein)), 'png_mut', 'x0_all')
+        sprintf('png_mut_last_%s.mat', protein)), 'png_mut', 'x0_all')
 
     clear protein png_mut x0_all rates_mut rho_mut par n_runs
 
