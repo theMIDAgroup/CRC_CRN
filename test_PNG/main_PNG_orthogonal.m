@@ -22,8 +22,8 @@ folder_results = './results';
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
 load(path_mim, 'new_CMIM'); CRN = new_CMIM;
 
-file_x0_phys = fullfile(folder_results, 'x0_phys.mat');
-aux_file_x0_mut = 'x0_%s.mat';
+file_x0_phys = fullfile(folder_results, 'starting_points/x0_phys.mat');
+aux_file_x0_mut = 'starting_points/x0_%s.mat';
 
 %% Step 2. Define general parameters of the network
 v = CRN.matrix.v;
@@ -37,8 +37,8 @@ toll_cond_init_point = 10^17; % This should be the same inside f_PNG_restart
 
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
 
-lof_mutations = {'PTEN', 'AKT'};%{'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF', 'TBRII'};
-gof_mutations = {};%{'Ras', 'PI3K', 'BetaCatenin', 'Raf'};
+lof_mutations = {'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF', 'TBRII', 'PTEN', 'AKT'};
+gof_mutations = {'Ras', 'PI3K', 'BetaCatenin', 'Raf'};
 lof_mutations_type2 = {'TP53'};
 all_mutations = [gof_mutations, lof_mutations, lof_mutations_type2];
 n_mutations = numel(all_mutations);
@@ -67,7 +67,7 @@ for ir = 1:n_runs
 end
 
 % 3.4. Save
-save(fullfile(folder_results, 'nuovi/png_ort_phys_testproj.mat'), 'png_ort_phys')
+save(fullfile(folder_results, 'last/png_ort_phys_testproj.mat'), 'png_ort_phys')
 
 clear png_ort_phys x0_all rates_phys S_phys rho_phys n_runs
 
@@ -104,7 +104,7 @@ for im = 1:n_mutations
 
     % 4.4. Save
     save(fullfile(folder_results, ...
-        sprintf('png_ort_mut_%s.mat', protein)), 'png_ort_mut', 'x0_all')
+        sprintf('last/png_ort_mut_%s.mat', protein)), 'png_ort_mut', 'x0_all')
 
     clear protein png_ort_mut x0_all rates_mut rho_mut par n_runs
 
