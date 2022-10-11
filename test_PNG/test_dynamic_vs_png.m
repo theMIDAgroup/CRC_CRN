@@ -28,9 +28,11 @@ folder_figures = './results/figures';
 file_CRN = fullfile(folder_data, 'CRC_CRN_nodrug.mat');
 
 aux_dyn_phys = 'dyn_%s.mat';
-aux_png_phys = 'png_%s_new.mat';
+aux_png_phys = '/last/png_%s_last.mat';
+%aux_png_phys = 'png_%s_last.mat';
 aux_dyn_mut = 'dyn_mut_%s.mat';
-aux_png_mut = 'png_mut_new_%s.mat';
+aux_png_mut = '/last/png_mut_last_%s.mat';
+%aux_png_mut = 'png_mut_last_%s.mat';
 
 % 1.2. Define general parameters of the network
 load(file_CRN); CRN = new_CMIM; clear new_CMIM
