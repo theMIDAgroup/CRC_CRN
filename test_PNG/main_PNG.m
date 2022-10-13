@@ -38,10 +38,10 @@ toll_cond_init_point = 10^17; % This should be the same inside f_PNG_restart
 
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
 
-lof_mutations = {'SMAD4','Cadh', 'APC','PTEN', 'AKT', 'ARF', 'TBRII'};  
-gof_mutations = {'Ras', 'PI3K', 'BetaCatenin', 'Raf'};
+lof_mutations = { 'PTEN', 'AKT', 'ARF', 'TBRII'};   %{'SMAD4','Cadh', 'APC',
+gof_mutations = {};%{'Ras', 'PI3K', 'BetaCatenin', 'Raf'};
 lof_mutations_type2 = {'TP53'};
-all_mutations = [gof_mutations, lof_mutations, lof_mutations_type2];
+all_mutations = [lof_mutations, gof_mutations, lof_mutations_type2];
 n_mutations = numel(all_mutations);
 
 %% Step 3. Run PNG on the network for physiological cells
@@ -114,7 +114,7 @@ for im = 1:n_mutations
 
     % 4.4. Save
     save(fullfile(folder_results, ...
-        sprintf('png_mut_last_%s.mat', protein)), 'png_mut', 'x0_all')
+        sprintf('last/png_mut_last_%s.mat', protein)), 'png_mut', 'x0_all')
 
     clear protein png_mut x0_all rates_mut rho_mut par n_runs
 

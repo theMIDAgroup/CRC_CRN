@@ -24,13 +24,13 @@ toll_cond_init_point = 10^17;
 tol = 1e-12; 
 %poss_alpha_old = logspace(0, -2, 20);
 %poss_alpha_2_old = logspace(3, -1, 40);
-poss_alpha_2 = ones(1,40);
+poss_alpha_2 = ones(1,60);
 poss_alpha_2(2) = 0.79;
 for i=3:length(poss_alpha_2)
     poss_alpha_2(i) = poss_alpha_2(i-1) * poss_alpha_2(2);
 end
 poss_alpha = poss_alpha_2(1:20); 
-poss_alpha_2 = poss_alpha_2 * 1e3;
+poss_alpha_2 = poss_alpha_2 * 1e3; 
 sigma = 10^-4;
 sigma_2 = 10^-4;
 FLAG = 0;
@@ -130,25 +130,25 @@ while ir < num_try
             delta = - J_x' * F_x;  % delta = - gradiente
             delta_vers = delta / norm(delta);
             ia = 1;
+
+             P_x_grad = x + delta_vers; 
+             P_x_grad(P_x_grad < 0) = 0;
+             diff_P_x = abs(x - P_x_grad); %
             while ia < numel(poss_alpha_2)
                 alpha = poss_alpha_2(ia);
                 xnew = x + alpha * delta_vers;
-                xnew_nonP = xnew; %
-                ind_xnew_out = (xnew<0); %
-                ind_xnew_in = (xnew >= 0); %
+                diff_P_x_M = diff_P_x(xnew >= 0); %
+                diff_P_x_N = diff_P_x(xnew < 0); %
+                
                 xnew(xnew<0) = x(xnew<0);
                 F_x_new = f_evaluate_mim(rate_constants, xnew, ...
                     idx_basic_species, Nl, rho, S, v, ind_one);
                 norm_F_x_new = norm(F_x_new);
                 theta_x = 0.5 * norm_F_x^2;
                 theta_x_new = 0.5 * norm_F_x_new^2;
-                diff_P_xnew = abs(x - xnew_nonP); %
-                diff_P_xnew_M = diff_P_xnew(ind_xnew_in); %
-                diff_P_xnew_N = x(ind_xnew_out); %
-                if ((theta_x_new <= theta_x + sigma_2 * (-delta_vers)' * (xnew - x)) && (norm(diff_P_xnew_M) >= norm(diff_P_xnew_N)))
+                
+                if ((theta_x_new <= theta_x + sigma_2 * (-delta_vers)' * (xnew - x)) && (norm(diff_P_x_M) >= norm(diff_P_x_N)))
                         
-                %if ((theta_x_new <= theta_x + sigma_2 * (-delta_vers)' * (xnew - x)) && ...
-                 %       ((delta_vers)'*(xnew - x) > (1/1000) * (alpha/1000) * act_constr' * abs(delta_vers)))
                     is = ia;
                     ia = numel(poss_alpha_2);
                     FLAG = 0;
@@ -159,14 +159,17 @@ while ir < num_try
                     alpha = poss_alpha_2(ia);
                     is = ia;
                 end
+                if (ia == numel(poss_alpha_2))
+                    SILVIA = 0; %DA TOGLIERE
+                end
             end
         
         % Store some informations
         norm_F_x_nm(counter) = norm_F_x_new;
         step_lengths(counter) = alpha;
         det_F_x(counter) = det(J_x);
-%          fprintf('Iteration %d - f(x) = %2.3e  ia = %d \n', ...
-%              counter, norm_F_x_nm(counter), is);        
+           fprintf('Iteration %d - f(x) = %2.3e  ia = %d alpha = %2.3e \n', ...
+               counter, norm_F_x_nm(counter), is, alpha);        
         
         %Num condizionamento dello jacobiano
         zeri(counter) = sum(xnew==0);
