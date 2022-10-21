@@ -140,6 +140,7 @@ while ir < num_try
                 diff_P_x_M = diff_P_x(xnew >= 0); %
                 diff_P_x_N = diff_P_x(xnew < 0); %
                 
+                miserve = xnew;
                 xnew(xnew<0) = x(xnew<0);
                 F_x_new = f_evaluate_mim(rate_constants, xnew, ...
                     idx_basic_species, Nl, rho, S, v, ind_one);
