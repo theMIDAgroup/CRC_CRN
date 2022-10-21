@@ -28,7 +28,7 @@ folder_figures = './results/figures';
 file_CRN = fullfile(folder_data, 'CRC_CRN_nodrug.mat');
 
 aux_dyn_phys = 'dyn_%s.mat';
-aux_png_phys = '/last/png_%s_last.mat';
+aux_png_phys = '/png_%s_last.mat';
 %aux_png_phys = 'png_%s_last.mat';
 aux_dyn_mut = 'dyn_mut_%s.mat';
 aux_png_mut = '/last/png_mut_last_%s.mat';
@@ -125,7 +125,7 @@ ylabel('Elapsed time [sec]')
 xtickangle(30)
 set(gca, 'Fontsize', 20, 'Yscale', 'linear')%, 'log')
 ylim([-5, 601])
-saveas(f_bp_time, fullfile(folder_figures, 'bp_time.png'))
+saveas(f_bp_time, fullfile(folder_figures, 'bp_time_grad.png'))
 
 f_bp_fxe = figure('units','normalized','outerposition',[0 0 0.7 0.5]);
 aux_ = [bp_fxeq_png; bp_fxeq_dyn];
@@ -140,7 +140,7 @@ xtickangle(30)
 set(gca, 'Fontsize', 20, 'YScale', 'log')
 set(h.lg, 'Location', 'East')
 ylim([0, 1])
-saveas(f_bp_fxe, fullfile(folder_figures, 'bp_fxe.png'))
+saveas(f_bp_fxe, fullfile(folder_figures, 'bp_fxe_grad.png'))
 
 %%
 mean_time_png = mean(bp_elapsed_time_png, 1);
