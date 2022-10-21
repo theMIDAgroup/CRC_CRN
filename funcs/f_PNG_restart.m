@@ -148,7 +148,7 @@ while ir < num_try
                 theta_x = 0.5 * norm_F_x^2;
                 theta_x_new = 0.5 * norm_F_x_new^2;
                 
-                if ((theta_x_new <= theta_x + sigma_2 * (-delta_vers)' * (xnew - x)) && (norm(diff_P_x_M) >= norm(diff_P_x_N)))
+                if ((theta_x_new <= theta_x + sigma_2 * (-delta)' * (xnew - x)) && (norm(diff_P_x_M) >= norm(diff_P_x_N)))
                         
                     is = ia;
                     ia = numel(poss_alpha_2);
