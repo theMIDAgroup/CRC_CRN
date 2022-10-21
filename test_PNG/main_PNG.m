@@ -13,8 +13,8 @@ clc
 
 addpath(fullfile('..', 'funcs'))
 
-do_phys = 0;
-do_mutation = 1; perc = 0;
+do_phys = 1;
+do_mutation = 0; perc = 0;
 
 %% Step1. Define path and load
 target = fullfile('..', 'data');
@@ -38,8 +38,8 @@ toll_cond_init_point = 10^17; % This should be the same inside f_PNG_restart
 
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
 
-lof_mutations = { 'PTEN', 'AKT', 'ARF', 'TBRII'};   %{'SMAD4','Cadh', 'APC',
-gof_mutations = {};%{'Ras', 'PI3K', 'BetaCatenin', 'Raf'};
+lof_mutations = {'SMAD4','Cadh', 'APC', 'PTEN', 'AKT', 'ARF', 'TBRII'};    
+gof_mutations = {'Ras', 'PI3K', 'BetaCatenin', 'Raf'};
 lof_mutations_type2 = {'TP53'};
 all_mutations = [lof_mutations, gof_mutations, lof_mutations_type2];
 n_mutations = numel(all_mutations);
@@ -71,7 +71,7 @@ end
 % 3.4. Save
 
 %PER PAPER
-save(fullfile(folder_results, 'png_phys_last.mat'), 'png_phys');
+%save(fullfile(folder_results, 'png_phys_modAR.mat'), 'png_phys');
 
 %PER TEST GRADIENT RELATED
 %save(fullfile(folder_results, 'nuovi/gr_new2_16.mat'), 'png_phys');
@@ -113,8 +113,8 @@ for im = 1:n_mutations
     end
 
     % 4.4. Save
-    save(fullfile(folder_results, ...
-        sprintf('last/png_mut_last_%s.mat', protein)), 'png_mut', 'x0_all')
+    %save(fullfile(folder_results, ...
+    %    sprintf('last/png_mut_last_%s.mat', protein)), 'png_mut', 'x0_all')
 
     clear protein png_mut x0_all rates_mut rho_mut par n_runs
 
