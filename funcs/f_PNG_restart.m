@@ -24,7 +24,7 @@ toll_cond_init_point = 10^17;
 tol = 1e-12; 
 %poss_alpha_old = logspace(0, -2, 20);
 %poss_alpha_2_old = logspace(3, -1, 40);
-poss_alpha_2 = ones(1,60);
+poss_alpha_2 = ones(1,40);
 poss_alpha_2(2) = 0.79;
 for i=3:length(poss_alpha_2)
     poss_alpha_2(i) = poss_alpha_2(i-1) * poss_alpha_2(2);
@@ -119,6 +119,7 @@ while ir < num_try
                 rcond_number(counter) = rcond(J_x); 
                 upd_components(counter) = n_species - sum(xnew==x);
                 zeri(counter) = sum(xnew==0);
+                metodo(counter) = 0;
 
             end
 
@@ -140,7 +141,6 @@ while ir < num_try
                 diff_P_x_M = diff_P_x(xnew >= 0); %
                 diff_P_x_N = diff_P_x(xnew < 0); %
                 
-                miserve = xnew;
                 xnew(xnew<0) = x(xnew<0);
                 F_x_new = f_evaluate_mim(rate_constants, xnew, ...
                     idx_basic_species, Nl, rho, S, v, ind_one);
@@ -160,23 +160,21 @@ while ir < num_try
                     alpha = poss_alpha_2(ia);
                     is = ia;
                 end
-                if (ia == numel(poss_alpha_2))
-                    SILVIA = 0; %DA TOGLIERE
-                end
             end
         
         % Store some informations
         norm_F_x_nm(counter) = norm_F_x_new;
         step_lengths(counter) = alpha;
         det_F_x(counter) = det(J_x);
-           fprintf('Iteration %d - f(x) = %2.3e  ia = %d alpha = %2.3e \n', ...
-               counter, norm_F_x_nm(counter), is, alpha);        
+           %fprintf('Iteration %d - f(x) = %2.3e  ia = %d alpha = %2.3e \n', ...
+            %   counter, norm_F_x_nm(counter), is, alpha);        
         
         %Num condizionamento dello jacobiano
         zeri(counter) = sum(xnew==0);
         cond_number(counter) = cond(J_x); 
         rcond_number(counter) = rcond(J_x); 
         upd_components(counter) = n_species - sum(xnew==x);
+        metodo(counter) = 1;
         
         end 
 %         disp("Iteration n. " + counter);
@@ -213,10 +211,10 @@ else
     ris.zeri(ir).n = zeri;
     ir = num_try + 1;
     clear upd_components cond_number zeri rcond_number
+    %figure;
+    %plot(metodo, '*');
 end
 
-%figure;
-%plot(norm_F_x_nm);
 
 end
 

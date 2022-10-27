@@ -20,8 +20,10 @@ do_mutation = 0; perc = 0;
 target = fullfile('..', 'data');
 
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
-folder_results = './results';
-file_x0_phys = fullfile(folder_results, 'starting_points/x0_phys.mat');
+folder_st_points = './results';
+folder_results = './results/27_10_classicmethod_40alpha';
+%folder_figures = './figures/stop_criterion_graph';
+file_x0_phys = fullfile(folder_st_points, 'starting_points/x0_phys.mat');
 aux_file_x0_mut = 'starting_points/x0_%s.mat';
 
 load(path_mim, 'new_CMIM'); CRN = new_CMIM;
@@ -38,8 +40,8 @@ toll_cond_init_point = 10^17; % This should be the same inside f_PNG_restart
 
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
 
-lof_mutations = {'SMAD4','Cadh', 'APC', 'PTEN', 'AKT', 'ARF', 'TBRII'};    
-gof_mutations = {'Ras', 'PI3K', 'BetaCatenin', 'Raf'};
+lof_mutations = {'APC', 'AKT', 'SMAD4',  'PTEN'};
+gof_mutations = {'Ras', 'Raf', 'PI3K', 'BetaCatenin'};
 lof_mutations_type2 = {'TP53'};
 all_mutations = [lof_mutations, gof_mutations, lof_mutations_type2];
 n_mutations = numel(all_mutations);
@@ -57,6 +59,7 @@ load(file_x0_phys, 'x0_all');
 
 n_runs = size(x0_all, 2);
 
+
 % 3.3. Run the algorithm
 for ir = 1:n_runs
     fprintf('Physiological run = %d \n', ir)
@@ -65,13 +68,27 @@ for ir = 1:n_runs
         rho_phys, idx_basic_species, v, ind_one, max_counter);
     aux_phys.elapse_time = toc(time_init);
     png_phys(ir) = aux_phys;
+    
+    
+%     % Grafico finale
+%     im = figure;
+%     plot(aux_phys.crit_stop1, '*');
+%     hold on
+%     plot(aux_phys.crit_stop2, '*');
+%     hold off
+%     title 'Criteri di stop';
+%     legend('norma', 'media');
+%     
+%     saveas(im, fullfile(folder_figures, sprintf('graph_%d', ir)))
+%     %close
+
     clear aux_phys tim_init
 end
 
 % 3.4. Save
 
 %PER PAPER
-%save(fullfile(folder_results, 'png_phys_modAR.mat'), 'png_phys');
+save(fullfile(folder_results, 'png_phys.mat'), 'png_phys');
 
 %PER TEST GRADIENT RELATED
 %save(fullfile(folder_results, 'nuovi/gr_new2_16.mat'), 'png_phys');
@@ -95,7 +112,7 @@ for im = 1:n_mutations
     protein = all_mutations{im};
     
     % 4.1. Load parameters of mutated network and initial points
-    file_x0_mut = fullfile(folder_results, sprintf(aux_file_x0_mut, protein));
+    file_x0_mut = fullfile(folder_st_points, sprintf(aux_file_x0_mut, protein));
     load(file_x0_mut, 'x0_all', 'par');
     rho_mut = par.rho_mut;
     rates_mut = par.rates_mut;
@@ -113,8 +130,8 @@ for im = 1:n_mutations
     end
 
     % 4.4. Save
-    %save(fullfile(folder_results, ...
-    %    sprintf('last/png_mut_last_%s.mat', protein)), 'png_mut', 'x0_all')
+    save(fullfile(folder_results, ...
+        sprintf('png_mut_%s.mat', protein)), 'png_mut', 'x0_all')
 
     clear protein png_mut x0_all rates_mut rho_mut par n_runs
 
