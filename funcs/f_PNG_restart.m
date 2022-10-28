@@ -21,9 +21,7 @@ function  ris = f_PNG_restart(x_0, rate_constants, S, Nl, rho, idx_basic_species
 
 %% Step 1. Define additional parameters within PNG
 toll_cond_init_point = 10^17;
-tol = 1e-12; 
-%poss_alpha_old = logspace(0, -2, 20);
-%poss_alpha_2_old = logspace(3, -1, 40);
+tol = 1e-12;
 poss_alpha_2 = ones(1,40);
 poss_alpha_2(2) = 0.79;
 for i=3:length(poss_alpha_2)
@@ -43,11 +41,11 @@ ir = 1;
 n_species = size(S, 1);
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
 
-%% Step 4. Run the algorithm 
+%% Step 3. Run the algorithm 
 while ir < num_try
    
-    fprintf('@@@@@@@@@@@  RUN num %d @@@@@@@@@@ \n', ir)
-%%      4.a. Define initial point
+    fprintf('@@@@@@@@@@@  RESTART num %d @@@@@@@@@@ \n', ir)
+%%      3.a. Define initial point
 %   We draw x_0 on the given stoichiometric compatibility class until
 %   cond(J_F(x_0)) is small enough
     if ir > 1
@@ -61,20 +59,17 @@ while ir < num_try
     disp('Let''s start')
     end
     
-%%      4.b. Initialize storing variables
+%%      3.b. Initialize storing variables
     norm_F_x_nm = zeros(max_counter, 1);
     step_lengths = zeros(max_counter, 1);
     det_F_x = zeros(max_counter, 1);
-    norm_grad = zeros(1,max_counter);
 
-%%      4.c. Run newton method 
+%%      3.c. External while
     x =  x_0; x(x<0) = 0;
     xnew = x; counter = 0; 
     F_x_new = f_evaluate_mim(rate_constants, xnew, idx_basic_species, ... 
                              Nl, rho, S, v, ind_one);
     norm_F_x_new = norm(F_x_new);
-    
-    j = 1;
 
     while (norm_F_x_new > tol) && (counter <= max_counter)
     
@@ -135,7 +130,7 @@ while ir < num_try
              P_x_grad = x + delta_vers; 
              P_x_grad(P_x_grad < 0) = 0;
              diff_P_x = abs(x - P_x_grad); %
-            while ia < numel(poss_alpha_2)
+            while ia <= numel(poss_alpha_2)
                 alpha = poss_alpha_2(ia);
                 xnew = x + alpha * delta_vers;
                 diff_P_x_M = diff_P_x(xnew >= 0); %
@@ -149,16 +144,10 @@ while ir < num_try
                 theta_x_new = 0.5 * norm_F_x_new^2;
                 
                 if ((theta_x_new <= theta_x + sigma_2 * (-delta)' * (xnew - x)) && (norm(diff_P_x_M) >= norm(diff_P_x_N)))
-                        
-                    is = ia;
-                    ia = numel(poss_alpha_2);
+                    ia = numel(poss_alpha_2)+1;
                     FLAG = 0;
-                    norm_grad(j) = norm(delta);
-                    j = j+1;
                 else
                     ia = ia+1;
-                    alpha = poss_alpha_2(ia);
-                    is = ia;
                 end
             end
         
@@ -196,6 +185,7 @@ if (counter == max_counter+1) && (norm_F_x_new > tol)
     ris.upd_components(ir).n = upd_components;
     ris.zeri(ir).n = zeri;
     ir = ir+1; 
+    FLAG = 0;
     clear upd_components cond_number zeri
 else
     % Step 6. Store results over run
