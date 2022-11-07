@@ -1,4 +1,5 @@
-function  ris = f_PNG_restart_orthogonal(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
+
+function  ris = f_PNG_restart(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
     v, ind_one, max_counter)
 
 
@@ -19,18 +20,35 @@ function  ris = f_PNG_restart_orthogonal(x_0, rate_constants, S, Nl, rho, idx_ba
 % the standard projector, having x0 as initial condition and working with
 % the MIM defined by rate_constants, S, Nl, rho, idx_basic_species, v, ind_one.
 
+
+
+%% TODO:
+% 1. Il calcolo/salvataggio di alcune variabili potrebbe essere reso 
+%    opzionale
+
+% The function 'f_PNG_restart' takes the following inputs:
+% - 'x0' is the starting point for the algorithm
+% - 'S' 'Nl', 'rho', 'idx_basic_species', 'ind_one', 'v' are some data about
+% the stoichiometric surface we're working on and colorectal cell's features
+% (in a physiological or mutated state)
+% - 'max_counter' is an integer that indicates how many iterations we want
+% the algorithm to do every time we choose a new starting point
+
+% The function returns the equilibrium computed through the PNG algorithm
+% (with a maximum number of iterations equal to max_counter) combined with
+% the non-projector, having x0 as initial condition and working with
+% the MIM defined by rate_constants, S, Nl, rho, idx_basic_species, v, ind_one.
+
 %% Step 1. Define additional parameters within PNG
 toll_cond_init_point = 10^17;
-tol = 1e-12; 
-%poss_alpha_old = logspace(0, -2, 20);
-%poss_alpha_2_old = logspace(3, -1, 40);
+tol = 1e-12;
 poss_alpha_2 = ones(1,40);
 poss_alpha_2(2) = 0.79;
 for i=3:length(poss_alpha_2)
     poss_alpha_2(i) = poss_alpha_2(i-1) * poss_alpha_2(2);
 end
 poss_alpha = poss_alpha_2(1:20); 
-poss_alpha_2 = poss_alpha_2 * 1e3;
+poss_alpha_2 = poss_alpha_2 * 1e3; 
 sigma = 10^-4;
 sigma_2 = 10^-4;
 FLAG = 0;
@@ -43,11 +61,11 @@ ir = 1;
 n_species = size(S, 1);
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
 
-%% Step 4. Run the algorithm 
+%% Step 3. Run the algorithm 
 while ir < num_try
    
-    fprintf('@@@@@@@@@@@  RUN num %d @@@@@@@@@@ \n', ir)
-%%      4.a. Define initial point
+    fprintf('@@@@@@@@@@@  RESTART num %d @@@@@@@@@@ \n', ir)
+%%      3.a. Define initial point
 %   We draw x_0 on the given stoichiometric compatibility class until
 %   cond(J_F(x_0)) is small enough
     if ir > 1
@@ -61,20 +79,17 @@ while ir < num_try
     disp('Let''s start')
     end
     
-%%      4.b. Initialize storing variables
+%%      3.b. Initialize storing variables
     norm_F_x_nm = zeros(max_counter, 1);
     step_lengths = zeros(max_counter, 1);
     det_F_x = zeros(max_counter, 1);
-    norm_grad = zeros(1,max_counter);
 
-%%      4.c. Run newton method 
+%%      3.c. External while
     x =  x_0; x(x<0) = 0;
     xnew = x; counter = 0; 
     F_x_new = f_evaluate_mim(rate_constants, xnew, idx_basic_species, ... 
                              Nl, rho, S, v, ind_one);
     norm_F_x_new = norm(F_x_new);
-    
-    j = 1;
 
     while (norm_F_x_new > tol) && (counter <= max_counter)
     
@@ -130,14 +145,15 @@ while ir < num_try
             delta = - J_x' * F_x;  % delta = - gradiente
             delta_vers = delta / norm(delta);
             ia = 1;
+
             P_x_grad = x + delta_vers; 
             P_x_grad(P_x_grad < 0) = 0;
             diff_P_x = abs(x - P_x_grad); %
-            while ia < numel(poss_alpha_2)
+            while ia <= numel(poss_alpha_2)
                 alpha = poss_alpha_2(ia);
                 xnew = x + alpha * delta_vers;
                 diff_P_x_M = diff_P_x(xnew >= 0); %
-                diff_P_x_N = diff_P_x(xnew < 0);
+                diff_P_x_N = diff_P_x(xnew < 0); %
                 
                 xnew(xnew<0) = 0;
                 F_x_new = f_evaluate_mim(rate_constants, xnew, ...
@@ -146,19 +162,11 @@ while ir < num_try
                 theta_x = 0.5 * norm_F_x^2;
                 theta_x_new = 0.5 * norm_F_x_new^2;
                 
-                if ((theta_x_new <= theta_x + sigma_2 * (-delta_vers)' * (xnew - x)) && (norm(diff_P_x_M) >= norm(diff_P_x_N)))
-                        
-                %if ((theta_x_new <= theta_x + sigma_2 * (-delta_vers)' * (xnew - x)) && ...
-                 %       ((delta_vers)'*(xnew - x) > (1/1000) * (alpha/1000) * act_constr' * abs(delta_vers)))
-                    is = ia;
-                    ia = numel(poss_alpha_2);
+                if ((theta_x_new <= theta_x + sigma_2 * (-delta)' * (xnew - x)) && (norm(diff_P_x_M) >= 1e-8 * norm(diff_P_x_N)))
+                    ia = numel(poss_alpha_2)+1;
                     FLAG = 0;
-                    norm_grad(j) = norm(delta);
-                    j = j+1;
                 else
                     ia = ia+1;
-                    alpha = poss_alpha_2(ia);
-                    is = ia;
                 end
             end
         
@@ -166,8 +174,8 @@ while ir < num_try
         norm_F_x_nm(counter) = norm_F_x_new;
         step_lengths(counter) = alpha;
         det_F_x(counter) = det(J_x);
-%          fprintf('Iteration %d - f(x) = %2.3e  ia = %d \n', ...
-%              counter, norm_F_x_nm(counter), is);        
+           %fprintf('Iteration %d - f(x) = %2.3e  ia = %d alpha = %2.3e \n', ...
+            %   counter, norm_F_x_nm(counter), is, alpha);        
         
         %Num condizionamento dello jacobiano
         zeri(counter) = sum(xnew==0);
@@ -195,7 +203,8 @@ if (counter == max_counter+1) && (norm_F_x_new > tol)
     ris.upd_components(ir).n = upd_components;
     ris.zeri(ir).n = zeri;
     ir = ir+1; 
-    clear upd_components cond_number zeri rcond_number
+    FLAG = 0;
+    clear upd_components cond_number zeri
 else
     % Step 6. Store results over run
     ris.x0 = x_0;
@@ -212,8 +221,6 @@ else
     clear upd_components cond_number zeri rcond_number
 end
 
-%figure;
-%plot(norm_F_x_nm);
 
 end
 
@@ -241,4 +248,5 @@ end
 % end
 % 
 % struct.all.effect_conv = num_run/num_trials;
+
 
