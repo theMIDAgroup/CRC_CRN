@@ -14,14 +14,14 @@ clc
 addpath(fullfile('..', 'funcs'))
 
 do_phys = 1;
-do_mutation = 0; perc = 0;
+do_mutation = 1; perc = 0;
 
 %% Step1. Define path and load
 target = fullfile('..', 'data');
 
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
 folder_st_points = './results';
-folder_results = './results/27_10_classicmethod_40alpha';
+folder_results = './results/31_10_classicmethod3mod_40alpha_10-2';
 %folder_figures = './figures/stop_criterion_graph';
 file_x0_phys = fullfile(folder_st_points, 'starting_points/x0_phys.mat');
 aux_file_x0_mut = 'starting_points/x0_%s.mat';
@@ -35,7 +35,7 @@ idx_basic_species = find(CRN.species.std_initial_values>0);
 n_species = size(CRN.matrix.S, 1);
 ind_one = n_species + 1;
 
-max_counter = 500;
+max_counter = 250;
 toll_cond_init_point = 10^17; % This should be the same inside f_PNG_restart
 
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
@@ -56,9 +56,7 @@ rho_phys = Nl*CRN.species.std_initial_values;
 
 % 3.2. Load initial points
 load(file_x0_phys, 'x0_all');
-
 n_runs = size(x0_all, 2);
-
 
 % 3.3. Run the algorithm
 for ir = 1:n_runs
