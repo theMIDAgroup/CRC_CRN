@@ -114,7 +114,6 @@ while ir < num_try
                 rcond_number(counter) = rcond(J_x); 
                 upd_components(counter) = n_species - sum(xnew==x);
                 zeri(counter) = sum(xnew==0);
-                metodo(counter) = 0;
 
             end
 
@@ -127,9 +126,9 @@ while ir < num_try
             delta_vers = delta / norm(delta);
             ia = 1;
 
-             P_x_grad = x + delta_vers; 
-             P_x_grad(P_x_grad < 0) = 0;
-             diff_P_x = abs(x - P_x_grad); %
+            P_x_grad = x + delta_vers; 
+            P_x_grad(P_x_grad < 0) = 0;
+            diff_P_x = abs(x - P_x_grad); %
             while ia <= numel(poss_alpha_2)
                 alpha = poss_alpha_2(ia);
                 xnew = x + alpha * delta_vers;
@@ -143,7 +142,7 @@ while ir < num_try
                 theta_x = 0.5 * norm_F_x^2;
                 theta_x_new = 0.5 * norm_F_x_new^2;
                 
-                if ((theta_x_new <= theta_x + sigma_2 * (-delta)' * (xnew - x)) && (norm(diff_P_x_M) >= norm(diff_P_x_N)))
+                if ((theta_x_new <= theta_x + sigma_2 * (-delta)' * (xnew - x)) && (norm(diff_P_x_M) >= 1e-2 * norm(diff_P_x_N)))
                     ia = numel(poss_alpha_2)+1;
                     FLAG = 0;
                 else
@@ -163,7 +162,6 @@ while ir < num_try
         cond_number(counter) = cond(J_x); 
         rcond_number(counter) = rcond(J_x); 
         upd_components(counter) = n_species - sum(xnew==x);
-        metodo(counter) = 1;
         
         end 
 %         disp("Iteration n. " + counter);
@@ -201,8 +199,6 @@ else
     ris.zeri(ir).n = zeri;
     ir = num_try + 1;
     clear upd_components cond_number zeri rcond_number
-    %figure;
-    %plot(metodo, '*');
 end
 
 
