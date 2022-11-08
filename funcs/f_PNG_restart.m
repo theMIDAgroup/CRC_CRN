@@ -31,6 +31,7 @@ poss_alpha = poss_alpha_2(1:20);
 poss_alpha_2 = poss_alpha_2 * 1e3; 
 sigma = 10^-4;
 sigma_2 = 10^-4;
+rho_newcond = 10^-2;
 FLAG = 0;
 
 num_try = 100;
@@ -142,7 +143,8 @@ while ir < num_try
                 theta_x = 0.5 * norm_F_x^2;
                 theta_x_new = 0.5 * norm_F_x_new^2;
                 
-                if ((theta_x_new <= theta_x + sigma_2 * (-delta)' * (xnew - x)) && (norm(diff_P_x_M) >= 1e-2 * norm(diff_P_x_N)))
+                if ((theta_x_new <= theta_x + sigma_2 * (-delta)' * (xnew - x)) ...
+                        && (norm(diff_P_x_M) >= rho_newcond * norm(diff_P_x_N)))
                     ia = numel(poss_alpha_2)+1;
                     FLAG = 0;
                 else

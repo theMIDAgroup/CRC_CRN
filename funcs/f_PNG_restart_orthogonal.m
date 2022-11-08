@@ -1,5 +1,4 @@
-
-function  ris = f_PNG_restart(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
+function  ris = f_PNG_restart_orthogonal(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
     v, ind_one, max_counter)
 
 
@@ -20,25 +19,6 @@ function  ris = f_PNG_restart(x_0, rate_constants, S, Nl, rho, idx_basic_species
 % the standard projector, having x0 as initial condition and working with
 % the MIM defined by rate_constants, S, Nl, rho, idx_basic_species, v, ind_one.
 
-
-
-%% TODO:
-% 1. Il calcolo/salvataggio di alcune variabili potrebbe essere reso 
-%    opzionale
-
-% The function 'f_PNG_restart' takes the following inputs:
-% - 'x0' is the starting point for the algorithm
-% - 'S' 'Nl', 'rho', 'idx_basic_species', 'ind_one', 'v' are some data about
-% the stoichiometric surface we're working on and colorectal cell's features
-% (in a physiological or mutated state)
-% - 'max_counter' is an integer that indicates how many iterations we want
-% the algorithm to do every time we choose a new starting point
-
-% The function returns the equilibrium computed through the PNG algorithm
-% (with a maximum number of iterations equal to max_counter) combined with
-% the non-projector, having x0 as initial condition and working with
-% the MIM defined by rate_constants, S, Nl, rho, idx_basic_species, v, ind_one.
-
 %% Step 1. Define additional parameters within PNG
 toll_cond_init_point = 10^17;
 tol = 1e-12;
@@ -51,6 +31,7 @@ poss_alpha = poss_alpha_2(1:20);
 poss_alpha_2 = poss_alpha_2 * 1e3; 
 sigma = 10^-4;
 sigma_2 = 10^-4;
+rho_newcond = 10^-8;
 FLAG = 0;
 
 num_try = 100;
@@ -162,7 +143,8 @@ while ir < num_try
                 theta_x = 0.5 * norm_F_x^2;
                 theta_x_new = 0.5 * norm_F_x_new^2;
                 
-                if ((theta_x_new <= theta_x + sigma_2 * (-delta)' * (xnew - x)) && (norm(diff_P_x_M) >= 1e-8 * norm(diff_P_x_N)))
+                if ((theta_x_new <= theta_x + sigma_2 * (-delta)' * (xnew - x)) ...
+                        && (norm(diff_P_x_M) >= rho_newcond * norm(diff_P_x_N)))
                     ia = numel(poss_alpha_2)+1;
                     FLAG = 0;
                 else
