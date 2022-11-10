@@ -1,9 +1,9 @@
 function  ris = f_PNG_restart(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
-    v, ind_one, max_counter)
+    v, ind_one, max_counter, proj)
 
 
 %% TODO:
-% 1. Il calcolo/salvataggio di alcune variabili potrebbe essere reso 
+% 1. Il calcolo/salvrataggio di alcune variabili potrebbe essere reso 
 %    opzionale
 
 % The function 'f_PNG_restart' takes the following inputs:
@@ -31,7 +31,7 @@ poss_alpha = poss_alpha_2(1:20);
 poss_alpha_2 = poss_alpha_2 * 1e3; 
 sigma = 10^-4;
 sigma_2 = 10^-4;
-rho_newcond = 10^-2;
+rho_newcond = 0;
 FLAG = 0;
 
 num_try = 100;
@@ -87,7 +87,11 @@ while ir < num_try
             while ia <= numel(poss_alpha) 
                 alpha = poss_alpha(ia);
                 xnew = x + alpha * delta;
-                xnew(xnew<0) = x(xnew<0);
+                if proj == 0
+                    xnew(xnew<0) = x(xnew<0);
+                else
+                    xnew(xnew<0) = 0;
+                end
                 F_x_new = f_evaluate_mim(rate_constants, xnew, ...
                     idx_basic_species, Nl, rho, S, v, ind_one);
                 norm_F_x_new = norm(F_x_new);
@@ -136,7 +140,11 @@ while ir < num_try
                 diff_P_x_M = diff_P_x(xnew >= 0); %
                 diff_P_x_N = diff_P_x(xnew < 0); %
                 
-                xnew(xnew<0) = x(xnew<0);
+                if proj == 0
+                    xnew(xnew<0) = x(xnew<0);
+                else
+                    xnew(xnew<0) = 0;
+                end
                 F_x_new = f_evaluate_mim(rate_constants, xnew, ...
                     idx_basic_species, Nl, rho, S, v, ind_one);
                 norm_F_x_new = norm(F_x_new);
