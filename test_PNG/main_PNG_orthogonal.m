@@ -13,12 +13,12 @@ clc
 
 addpath(fullfile('..', 'funcs'))
 
-do_phys = 0;
+do_phys = 1;
 do_mutation = 1; perc = 0;
 
 %% Step1. Define path and load
 target = fullfile('..', 'data');
-folder_results = './results/PTEN_ortenon';
+folder_results = './results/18_11_ort';
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
 load(path_mim, 'new_CMIM'); CRN = new_CMIM;
 folder_st_points = './results';
@@ -37,9 +37,9 @@ toll_cond_init_point = 10^17; % This should be the same inside f_PNG_restart
 
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
 
-lof_mutations = {'PTEN'};%'APC', 'AKT', 'SMAD4',  'PTEN'};
-gof_mutations = {};%'Ras', 'Raf', 'PI3K', 'BetaCatenin'};
-lof_mutations_type2 = {};%'TP53'};
+lof_mutations = {'APC', 'AKT', 'SMAD4',  'PTEN'};
+gof_mutations = {'Ras', 'Raf', 'PI3K', 'BetaCatenin'};
+lof_mutations_type2 = {'TP53'};
 all_mutations = [gof_mutations, lof_mutations, lof_mutations_type2];
 n_mutations = numel(all_mutations);
 
@@ -59,8 +59,8 @@ n_runs = size(x0_all, 2);
 for ir = 1:n_runs
     fprintf('Physiological run = %d \n', ir)
     time_init = tic;
-    aux_phys = f_PNG_restart_orthogonal(x0_all(:, ir), rates_phys, S_phys, Nl, ...
-        rho_phys, idx_basic_species, v, ind_one, max_counter);
+    aux_phys = f_PNG_restart(x0_all(:, ir), rates_phys, S_phys, Nl, ...
+        rho_phys, idx_basic_species, v, ind_one, max_counter, 1);
     aux_phys.elapse_time = toc(time_init);
     png_ort_phys(ir) = aux_phys;
     clear aux_phys tim_init
@@ -95,8 +95,8 @@ for im = 1:n_mutations
     for ir = 1:n_runs
         fprintf('Mutation %s run = %d \n', protein, ir)
         time_init = tic;
-        aux_mut = f_PNG_restart_orthogonal(x0_all(:, ir), rates_mut, S_mut, Nl, ...
-            rho_mut, idx_basic_species, v, ind_one, max_counter);
+        aux_mut = f_PNG_restart(x0_all(:, ir), rates_mut, S_mut, Nl, ...
+            rho_mut, idx_basic_species, v, ind_one, max_counter, 1);
         aux_mut.elapse_time = toc(time_init);
         png_ort_mut(ir) = aux_mut;
         clear aux_mut tim_init
@@ -104,7 +104,7 @@ for im = 1:n_mutations
 
     % 4.4. Save
     save(fullfile(folder_results, ...
-        sprintf('png_ort_mut_%s_8.mat', protein)), 'png_ort_mut', 'x0_all')
+        sprintf('png_ort_mut_%s.mat', protein)), 'png_ort_mut', 'x0_all')
 
     clear protein png_ort_mut x0_all rates_mut rho_mut par n_runs
 

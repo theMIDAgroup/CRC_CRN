@@ -21,7 +21,7 @@ target = fullfile('..', 'data');
 
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
 folder_st_points = './results';
-folder_results = './results/31_10_classicmethod3mod_40alpha_10-2';
+folder_results = './results/18_11';
 %folder_figures = './figures/stop_criterion_graph';
 file_x0_phys = fullfile(folder_st_points, 'starting_points/x0_phys.mat');
 aux_file_x0_mut = 'starting_points/x0_%s.mat';
@@ -63,22 +63,9 @@ for ir = 1:n_runs
     fprintf('Physiological run = %d \n', ir)
     time_init = tic;
     aux_phys = f_PNG_restart(x0_all(:, ir), rates_phys, S_phys, Nl, ...
-        rho_phys, idx_basic_species, v, ind_one, max_counter);
+        rho_phys, idx_basic_species, v, ind_one, max_counter, 0);
     aux_phys.elapse_time = toc(time_init);
     png_phys(ir) = aux_phys;
-    
-    
-%     % Grafico finale
-%     im = figure;
-%     plot(aux_phys.crit_stop1, '*');
-%     hold on
-%     plot(aux_phys.crit_stop2, '*');
-%     hold off
-%     title 'Criteri di stop';
-%     legend('norma', 'media');
-%     
-%     saveas(im, fullfile(folder_figures, sprintf('graph_%d', ir)))
-%     %close
 
     clear aux_phys tim_init
 end
@@ -121,7 +108,7 @@ for im = 1:n_mutations
         fprintf('Mutation %s run = %d \n', protein, ir)
         time_init = tic;
         aux_mut = f_PNG_restart(x0_all(:, ir), rates_mut, S_mut, Nl, ...
-            rho_mut, idx_basic_species, v, ind_one, max_counter);
+            rho_mut, idx_basic_species, v, ind_one, max_counter, 0);
         aux_mut.elapse_time = toc(time_init);
         png_mut(ir) = aux_mut;
         clear aux_mut tim_init

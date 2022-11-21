@@ -31,10 +31,10 @@ poss_alpha = poss_alpha_2(1:20);
 poss_alpha_2 = poss_alpha_2 * 1e3; 
 sigma = 10^-4;
 sigma_2 = 10^-4;
-rho_newcond = 0;
+rho_newcond = 10^-2;
 FLAG = 0;
 
-num_try = 100;
+num_try = 500;
 
 ir = 1;
 
@@ -97,6 +97,7 @@ while ir < num_try
                 norm_F_x_new = norm(F_x_new);
                 if norm_F_x_new <= sqrt(1-alpha*sigma)*norm_F_x
                     ia = numel(poss_alpha)+1;
+                    flag_save(counter) = 0;
                     FLAG = 0;        
                 else
                     FLAG = 1;
@@ -121,12 +122,16 @@ while ir < num_try
                 zeri(counter) = sum(xnew==0);
 
             end
-
+                
+                
 % ******************* Projected Gradient Descent **************************
         else 
         
-%             disp('********************************************************************************')
-
+             disp('********************************************************************************')
+            
+          
+            flag_save(counter) = 1;
+            
             delta = - J_x' * F_x;  % delta = - gradiente
             delta_vers = delta / norm(delta);
             ia = 1;
@@ -192,9 +197,10 @@ if (counter == max_counter+1) && (norm_F_x_new > tol)
     ris.rcond_number(ir).n = rcond_number;
     ris.upd_components(ir).n = upd_components;
     ris.zeri(ir).n = zeri;
+    ris.flag(ir).n = flag_save;
     ir = ir+1; 
     FLAG = 0;
-    clear upd_components cond_number zeri
+    clear upd_components cond_number zeri flag_save
 else
     % Step 6. Store results over run
     ris.x0 = x_0;
@@ -207,8 +213,9 @@ else
     ris.cond_number(ir).n = cond_number;
     ris.rcond_number(ir).n = rcond_number;
     ris.zeri(ir).n = zeri;
+    ris.flag(ir).n = flag_save;
     ir = num_try + 1;
-    clear upd_components cond_number zeri rcond_number
+    clear upd_components cond_number zeri rcond_number flag_save
 end
 
 
