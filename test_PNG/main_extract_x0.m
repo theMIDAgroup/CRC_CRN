@@ -5,7 +5,7 @@
 % Loss of Function: {'TBRII', 'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF'}
 % Gain of Function: {'Raf', 'Ras', 'PI3K', 'BetaCatenin'}
 % Loss of Function (type2): {'TP53'}.
-% Computed points saved in 'results/x0_phys.mat'
+% Computed points are saved in 'results/starting_points/x0_phys.mat'
 
 clc
 clear
@@ -13,9 +13,10 @@ close
 
 addpath(fullfile('..', 'funcs'))
 
+n_runs = 50;
+
 %% Step 1. Define general parameters and folders
 % 1.a. Define parameters of the analysis
-n_runs = 50;
 lof_mutations = {'TBRII', 'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF'};
 gof_mutations = {'Raf', 'Ras', 'PI3K', 'BetaCatenin'};
 lof_mutations_type2 = {'TP53'};
@@ -44,7 +45,7 @@ rates_phys = CRN.rates.std_values;
 S_phys = CRN.matrix.S;
 rho_phys = Nl*CRN.species.std_initial_values;
 
-% 3.2. Draw intial points
+% 3.2. Draw initial points
 x0_all = zeros(n_species, n_runs);
 toll_cond_init_point = 10^17;
 for ir = 1:n_runs
@@ -61,7 +62,7 @@ save(fullfile(folder_results, 'x0_phys.mat'), 'x0_all')
 
 clear x0_all
 
-%% Step 4. Define initial points for the mutated statesphysiologica
+%% Step 4. Define initial points for the mutated states
 x0_phys = CRN.species.std_initial_values;
 rates_phys = CRN.rates.std_values;
 S_mut = CRN.matrix.S;
@@ -89,7 +90,8 @@ for im = 1:n_mutations
 
     par.rho_mut = rho_mut;
     par.rates_mut = rates_mut;
-
+    
+    % Save
     save(fullfile(folder_results, sprintf('x0_%s.mat', protein)), ...
         'x0_all', 'par')
     clear x0_mut rho_mut x0_all par

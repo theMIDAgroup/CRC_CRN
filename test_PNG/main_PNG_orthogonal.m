@@ -6,7 +6,7 @@ clc
 % stoichiometric surface, using the orthogonal projector (to make a comparison
 % between using the latter or our non-projector).
 % Starting points: x0_all selected with 'main_extract_x0.m'.
-% Function used for the simulation: 'f_PNG_restart_orthogonal'.
+% Function used for the simulation: 'f_PNG_restart' with proj = 1.
 % PHYSIOLOGICAL CASE: results in results/'png_ort_phys_testproj.mat'
 % MUTATED CASES: results in results/'png_ort_mut_protein.mat', where
 % 'protein' represents the mutation considered in each situation.
@@ -33,7 +33,7 @@ n_species = size(CRN.matrix.S, 1);
 ind_one = n_species + 1;
 
 max_counter = 250;
-toll_cond_init_point = 10^17; % This should be the same inside f_PNG_restart
+toll_cond_init_point = 10^17;
 
 jacobian_v = f_compute_analytic_jacobian_v(v, n_species, ind_one);
 
@@ -77,8 +77,7 @@ if do_mutation
     
     x0_phys = CRN.species.std_initial_values;
     rates_phys = CRN.rates.std_values;
-    S_mut = CRN.matrix.S; % The code is setting such that GOF mutations
-                          % are defined zeroing proper rates
+    S_mut = CRN.matrix.S; 
     
 for im = 1:n_mutations
     
@@ -111,6 +110,9 @@ for im = 1:n_mutations
 end
 
 end
+
+
+%% DIREI CHE LA PARTE CHE SEGUE SI PUO' TOGLIERE!
 
 %% Step 5. Check results (physiological)
 path_results_dyn = fullfile('..', 'results');

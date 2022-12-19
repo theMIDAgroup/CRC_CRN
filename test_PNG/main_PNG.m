@@ -4,17 +4,17 @@ clc
 
 % Here we use the PNG method for computing equilibrium points on the physiological
 % stoichiometric surface, using our non-projector (to make a comparison between
-% using the latter or the orthogonal projector).
+% using the latter or the classical projector).
 % Starting points: x0_all selected with 'main_extract_x0.m'.
-% Function used for the simulation: 'f_PNG_restart'.
+% Function used for the simulation: 'f_PNG_restart' with proj = 0.
 % PHYSIOLOGICAL CASE: results in results/'png_phys_testproj.mat'
 % MUTATED CASES: results in results/'png_mut_protein.mat', where
 % 'protein' represents the mutation considered in each situation.
 
 addpath(fullfile('..', 'funcs'))
 
-do_phys = 1;
-do_mutation = 1; perc = 0;
+do_phys = 0;
+do_mutation = 0; perc = 0;
 
 %% Step1. Define path and load
 target = fullfile('..', 'data');
@@ -73,7 +73,7 @@ end
 % 3.4. Save
 
 %PER PAPER
-save(fullfile(folder_results, 'png_phys.mat'), 'png_phys');
+%save(fullfile(folder_results, 'png_phys.mat'), 'png_phys');
 
 %PER TEST GRADIENT RELATED
 %save(fullfile(folder_results, 'nuovi/gr_new2_16.mat'), 'png_phys');
@@ -115,14 +115,18 @@ for im = 1:n_mutations
     end
 
     % 4.4. Save
-    save(fullfile(folder_results, ...
-        sprintf('png_mut_%s.mat', protein)), 'png_mut', 'x0_all')
+    %save(fullfile(folder_results, ...
+        %sprintf('png_mut_%s.mat', protein)), 'png_mut', 'x0_all')
 
     clear protein png_mut x0_all rates_mut rho_mut par n_runs
 
 end
 
 end
+
+
+
+%% DIREI CHE LA PARTE CHE SEGUE SI PUO' TOGLIERE!
 
 %% Step 5. Check results (physiological)
 path_results_dyn = fullfile('..', 'results');

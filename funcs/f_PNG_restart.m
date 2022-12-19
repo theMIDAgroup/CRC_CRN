@@ -72,7 +72,7 @@ while ir < num_try
                              Nl, rho, S, v, ind_one);
     norm_F_x_new = norm(F_x_new);
 
-    while (norm_F_x_new > tol) && (counter <= max_counter)
+    while (norm_F_x_new > tol) && (counter < max_counter)
     
         counter = counter + 1;
         x = xnew; F_x = F_x_new; norm_F_x = norm_F_x_new;
@@ -192,7 +192,7 @@ while ir < num_try
 x_res = xnew;
 
 % Restart if convergence hasn't been reached
-if (counter == max_counter+1) && (norm_F_x_new > tol)
+if (counter == max_counter) && (norm_F_x_new > tol)
     ris.cond_number(ir).n = cond_number;
     ris.rcond_number(ir).n = rcond_number;
     ris.upd_components(ir).n = upd_components;

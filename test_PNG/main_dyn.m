@@ -16,11 +16,12 @@ do_mutation = 1;
 %% Step1. Define path and load
 target = fullfile('..', 'data');
 folder_results = './results';
+folder_st_points = './results/starting_points';
 
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat'); % Network
 load(path_mim, 'new_CMIM'); CRN = new_CMIM;
 
-file_x0_phys = fullfile(folder_results, 'x0_phys.mat');
+file_x0_phys = fullfile(folder_st_points, 'x0_phys.mat');
 aux_file_x0_mut = 'x0_%s.mat';
 
 %% Step 2. Define general parameters of the network
@@ -75,7 +76,7 @@ for im = 1:n_mutations
     protein = all_mutations{im};
 
 % 4.1. Define the mutated network 
-    file_x0_mut = fullfile(folder_results, sprintf(aux_file_x0_mut, protein));
+    file_x0_mut = fullfile(folder_st_points, sprintf(aux_file_x0_mut, protein));
     load(file_x0_mut, 'x0_all', 'par');
     rho_mut = par.rho_mut;
     rates_mut = par.rates_mut;

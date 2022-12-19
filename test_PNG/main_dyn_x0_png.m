@@ -2,15 +2,15 @@ clear all
 close all
 clc
 
-% Here we use the dynamic approach for computing equilibrium points using as
+% Here we use the dynamic approach for computing equilibrium points selecting as
 % initial conditions the points the PNG method managed to reach convergence with.
 % So we are using the ones saved in './results/png_phys_testproj.mat'.
 % The reason why we do this is showing that the results we obtain with the dynamic
 % approach doesn't depend on the specific point we're starting from, but only
 % on the stoichiometric surface we're working on. 
 
-do_phys = 1;
-do_mutation = 0;
+do_phys = 0;
+do_mutation = 1;
 
 %% Path, folders & load - physiological case
 
