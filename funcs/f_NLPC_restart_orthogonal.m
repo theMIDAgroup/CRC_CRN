@@ -1,4 +1,4 @@
-function  ris = f_PNG_restart_orthogonal(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
+function  ris = f_NLPC_restart_orthogonal(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
     v, ind_one, max_counter)
 
 
@@ -6,7 +6,7 @@ function  ris = f_PNG_restart_orthogonal(x_0, rate_constants, S, Nl, rho, idx_ba
 % 1. Il calcolo/salvataggio di alcune variabili potrebbe essere reso 
 %    opzionale
 
-% The function 'f_PNG_restart_orthogonal' takes the following inputs:
+% The function 'f_NLPC_restart_orthogonal' takes the following inputs:
 % - 'x0' is the starting point for the algorithm
 % - 'S' 'Nl', 'rho', 'idx_basic_species', 'ind_one', 'v' are some data about
 % the stoichiometric surface we're working on and colorectal cell's features
@@ -14,12 +14,12 @@ function  ris = f_PNG_restart_orthogonal(x_0, rate_constants, S, Nl, rho, idx_ba
 % - 'max_counter' is an integer that indicates how many iterations we want
 % the algorithm to do every time we choose a new starting point
 
-% The function returns the equilibrium computed through the PNG algorithm
+% The function returns the equilibrium computed through the NLPC algorithm
 % (with a maximum number of iterations equal to max_counter) combined with
 % the standard projector, having x0 as initial condition and working with
 % the MIM defined by rate_constants, S, Nl, rho, idx_basic_species, v, ind_one.
 
-%% Step 1. Define additional parameters within PNG
+%% Step 1. Define additional parameters within NLPC
 toll_cond_init_point = 10^17;
 tol = 1e-12;
 poss_alpha_2 = ones(1,40);
