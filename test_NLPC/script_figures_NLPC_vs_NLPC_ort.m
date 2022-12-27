@@ -117,7 +117,7 @@ for im = 1:n_mutations
 end
 
 
-%% Make boxplots 
+%% Step 3. Make figures
 for im = 1:numel(cond_name)
     mutation = cond_name{im};
     if strcmp(mutation, 'Ras')
@@ -131,6 +131,7 @@ for im = 1:numel(cond_name)
     end
 end
 
+%% F1 (additional) Boxplots for elapsed time
 bp_proj_time = figure('units','normalized','outerposition',[0 0 0.7 0.5]);
 aux_ = [bp_elapsed_time_nlpc; bp_elapsed_time_nlpc_ort];
 group_idx = [ones(1, n_runs), 2*ones(1, n_runs)];
@@ -146,6 +147,7 @@ set(h.lg, 'Location', 'North', 'Interpreter', 'Latex')
 ylim([-5, 2000])
 saveas(bp_proj_time, fullfile(folder_figures, 'bp_elpased_time_ort.png'))
 
+%% F2 Boxplots for the number of restarts
 f_bp_attempts = figure('units','normalized','outerposition',[0 0 0.7 0.5]);
 aux_ = [bp_attempts_nlpc; bp_attempts_nlpc_ort];
 group_idx = [ones(1, n_runs), 2*ones(1, n_runs)];
