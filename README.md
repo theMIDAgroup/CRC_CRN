@@ -21,14 +21,14 @@ Run main_script_\*.m to reproduce the results of the paper.
 # For reproducing results from Berra et al. submitted:
 
 Code is written in Matlab R2017b.
-Results of the simulations are provided in the folder './results_paper'.
+Results of the simulations are provided in the folder './test_NLPC/results_paper'.
 The implementation of the NLPC methods can be found in './funcs/f_NLPC_restart.m'
 
-To reproduce the figures of the paper, run script_figure_\*.m .
+To reproduce the figures of the paper, run ./test_NLPC/script_figure_\*.m .
 To reproduce the analysis of the paper, run:
-* main_extract_x0.m to sample the initial points for NLPC.
-* main_NLPC.m and main_NLPC_ort.m to run NLPC with the proposed non linear projector and the classical orthogonal projector, respectively
-* main_dyn.m to compute the steady states with a classical ODEs solver.
+* ./test_NLPC/main_extract_x0.m to sample the initial points for NLPC.
+* ./test_NLPC/main_NLPC.m and ./test_NLPC/main_NLPC_ort.m to run NLPC with the proposed non linear projector and the classical orthogonal projector, respectively
+* ./test_NLPC/main_dyn.m to compute the steady states with a classical ODEs solver.
 
 
 # External packages:
