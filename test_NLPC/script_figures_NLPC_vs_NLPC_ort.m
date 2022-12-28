@@ -116,6 +116,10 @@ for im = 1:n_mutations
     
 end
 
+mean_ratio = mean(mean(ratio_attempts_all()));
+
+disp("Mean of the ratio of number of attempts (PNG/PNG ort): " + mean_ratio);
+
 % Change mutation labels
 for im = 1:numel(cond_name)
     mutation = cond_name{im};
