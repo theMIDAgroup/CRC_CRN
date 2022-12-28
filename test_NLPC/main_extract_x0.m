@@ -5,7 +5,7 @@
 % Loss of Function: {'TBRII', 'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF'}
 % Gain of Function: {'Raf', 'Ras', 'PI3K', 'BetaCatenin'}
 % Loss of Function (type2): {'TP53'}.
-% Computed points are saved in 'results/starting_points/x0_phys.mat'
+% Computed points are saved in 'results/starting_points/'
 
 clc
 clear
@@ -26,7 +26,10 @@ perc = 0;
 
 % 1.b. Define CRN path and load
 target = fullfile('..', 'data');
-folder_results = './results';
+folder_results = './results/starting_points';
+if ~exist(folder_results, 'dir')
+   mkdir(folder_results)
+end
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
 load(path_mim, 'new_CMIM'); CRN = new_CMIM;
 
