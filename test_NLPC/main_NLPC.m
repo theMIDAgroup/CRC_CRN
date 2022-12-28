@@ -2,9 +2,9 @@ clear
 close all
 clc
 
-% Here we use the NLPC method for computing equilibrium points on the physiological
-% stoichiometric surface, using our non-projector (to make a comparison between
-% using the latter or the classical projector).
+% Here we use the NLPC method for computing equilibrium points on the 
+% physiological and mutated stoichiometric surfaces, using the novel 
+% non linear projector. 
 % Starting points: x0_all selected with 'main_extract_x0.m'.
 % Function used for the simulation: 'f_NLPC_restart' with proj = 0.
 % PHYSIOLOGICAL CASE: results in results/'nlpc_phys_testproj.mat'
@@ -13,18 +13,17 @@ clc
 
 addpath(fullfile('..', 'funcs'))
 
-do_phys = 0;
+do_phys = 1;
 do_mutation = 1; perc = 0;
 
 %% Step1. Define path and load
 target = fullfile('..', 'data');
 
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
-folder_st_points = './results';
-folder_results = './results/22_12';
-%folder_figures = './figures/stop_criterion_graph';
-file_x0_phys = fullfile(folder_st_points, 'starting_points/x0_phys.mat');
-aux_file_x0_mut = 'starting_points/x0_%s.mat';
+folder_st_points = './results/starting_points';
+folder_results = './results/';
+file_x0_phys = fullfile(folder_st_points, 'x0_phys.mat');
+aux_file_x0_mut = 'x0_%s.mat';
 
 load(path_mim, 'new_CMIM'); CRN = new_CMIM;
 
@@ -71,16 +70,7 @@ for ir = 1:n_runs
 end
 
 % 3.4. Save
-
-%PER PAPER
-%save(fullfile(folder_results, 'nlpc_phys.mat'), 'nlpc_phys');
-
-%PER TEST GRADIENT RELATED
-%save(fullfile(folder_results, 'nuovi/gr_new2_16.mat'), 'nlpc_phys');
-
-%PER TEST PROIETTORI
-%save(fullfile(folder_results, 'nuovi/nlpc_phys_testproj.mat'), 'nlpc_phys');
-
+save(fullfile(folder_results, 'nlpc_phys.mat'), 'nlpc_phys');
 clear nlpc_phys_aml x0_all rates_phys S_phys rho_phys n_runs
 
 end
@@ -115,67 +105,11 @@ for im = 1:n_mutations
     end
 
     % 4.4. Save
-    %save(fullfile(folder_results, ...
-        %sprintf('nlpc_mut_%s.mat', protein)), 'nlpc_mut', 'x0_all')
+    save(fullfile(folder_results, ...
+        sprintf('nlpc_mut_%s.mat', protein)), 'nlpc_mut', 'x0_all')
 
     clear protein nlpc_mut x0_all rates_mut rho_mut par n_runs
 
 end
 
 end
-
-
-
-%% DIREI CHE LA PARTE CHE SEGUE SI PUO' TOGLIERE!
-
-%% Step 5. Check results (physiological)
-path_results_dyn = fullfile('..', 'results');
-
-file_phys = fullfile(path_results_dyn, 'results_physiological.mat');
-load(file_phys, 'ris_phys')
-load('nlpc_phys');
-ir = 1; 
-delta = (nlpc_phys(ir).x  - ris_phys.x_eq(1:end-2)) ./ ris_phys.x_eq(1:end-2);
-figure
-plot(delta)
-
-%% Step 6. Check results (mutation)
-protein = 'BetaCatenin';
-ir = 1; % Run of NLPC to be consider
-
-path_results_dyn = fullfile('..', 'results');
-
-file_dyn = fullfile('..', 'results', ...
-    sprintf('results_mutation_%s_perc_0.0.mat', protein));
-file_nlpc = fullfile(sprintf('nlpc_mut_%s_test1.mat', protein));
-file_dyn_phys = fullfile('..', 'results', ...
-    'results_physiological.mat');
-file_nlpc_phys = fullfile('nlpc_phys_test1.mat');
-
-load(file_dyn, 'ris_mutated')
-load(file_nlpc, 'nlpc_mut')
-load(file_dyn_phys, 'ris_phys')
-load(file_nlpc_phys, 'nlpc_phys')
-
-x_eq_nlpc = nlpc_mut(ir).x;
-x_eq_dyn_1 = ris_mutated.x_mut_eq(1:n_species);
-x_eq_dyn_2 = ris_mutated.x_xemut_eq(1:n_species);
-x_eq_phys_dyn = ris_phys.x_eq(1:n_species);
-x_eq_phys = nlpc_phys(1).x;
-
-delta_nlpc = (x_eq_nlpc - x_eq_phys) ./ x_eq_phys;
-delta_dyn_1 = (x_eq_dyn_1 - x_eq_phys_dyn) ./ x_eq_phys_dyn;
-delta_dyn_2 = (x_eq_dyn_2 - x_eq_phys) ./ x_eq_phys;
-
-figure
-subplot(2, 1, 1)
-plot(delta_nlpc, 'k', 'linewidth', 2)
-hold on
-plot(delta_dyn_1, 'r--', 'linewidth', 1.5)
-symlog('y')
-
-subplot(2, 1, 2)
-plot(delta_nlpc, 'k', 'linewidth', 2)
-hold on
-plot(delta_dyn_2, 'r--', 'linewidth', 1.5)
-symlog('y')

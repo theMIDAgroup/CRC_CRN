@@ -1,23 +1,24 @@
 function  ris = f_NLPC_restart(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
     v, ind_one, max_counter, proj)
 
-
-%% TODO:
-% 1. Il calcolo/salvrataggio di alcune variabili potrebbe essere reso 
-%    opzionale
+% Function implementing the Non-Linearly Projected Combined (NLPC)
+% algorithm.
 
 % The function 'f_NLPC_restart' takes the following inputs:
 % - 'x0' is the starting point for the algorithm
-% - 'S' 'Nl', 'rho', 'idx_basic_species', 'ind_one', 'v' are some data about
-% the stoichiometric surface we're working on and colorectal cell's features
-% (in a physiological or mutated state)
+% - 'rate_constants', 'S' 'Nl', 'rho', 'idx_basic_species', 'ind_one', 'v'
+% are some data about the stoichiometric surface we're working on and 
+% cell's features (in a physiological or mutated state)
 % - 'max_counter' is an integer that indicates how many iterations we want
 % the algorithm to do every time we choose a new starting point
+% - 'proj' is a binry variabile indicating whether to use the classical
+% orthogonal projector (proj=1) or the novel non-linear proojector
+% (proj=0).
 
 % The function returns the equilibrium computed through the NLPC algorithm
-% (with a maximum number of iterations equal to max_counter) combined with
-% the non-projector, having x0 as initial condition and working with
-% the MIM defined by rate_constants, S, Nl, rho, idx_basic_species, v, ind_one.
+% (with a maximum number of iterations equal to max_counter) having x0 as 
+% initial condition and working with the Chemical Rection Network
+% defined by rate_constants, S, Nl, rho, idx_basic_species, v, ind_one.
 
 %% Step 1. Define additional parameters within NLPC
 toll_cond_init_point = 10^17;
@@ -115,7 +116,7 @@ while ir < num_try
 %                 fprintf('Iteration %d - f(x) = %2.3e  \n', ...
 %                     counter, norm_F_x_nm(counter));
                 
-                %Num condizionamento dello jacobiano
+                % Condition number of the Jacobian Matrix
                 cond_number(counter) = cond(J_x); 
                 rcond_number(counter) = rcond(J_x); 
                 upd_components(counter) = n_species - sum(xnew==x);
@@ -127,7 +128,7 @@ while ir < num_try
 % ******************* Projected Gradient Descent **************************
         else 
         
-             disp('********************************************************************************')
+%              disp('********************************************************************************')
             
           
             flag_save(counter) = 1;
@@ -172,7 +173,7 @@ while ir < num_try
            %fprintf('Iteration %d - f(x) = %2.3e  ia = %d alpha = %2.3e \n', ...
             %   counter, norm_F_x_nm(counter), is, alpha);        
         
-        %Num condizionamento dello jacobiano
+        % Condition number of the Jacobian Matrix
         zeri(counter) = sum(xnew==0);
         cond_number(counter) = cond(J_x); 
         rcond_number(counter) = rcond(J_x); 
@@ -220,29 +221,4 @@ end
 
 
 end
-
-% struct.ris = ris;
-% 
-% %% Check: how many times dynamic and Newton-GD get to the same result?
-% 
-% 
-% %% Norm of F in the equilibrium point
-% 
-% mean_norm_F = 0;
-% 
-% for i = 1:num_run
-%     mean_norm_F = ris(i).norm_F + mean_norm_F;
-% end
-% 
-% struct.all.mean_norm_F = mean_norm_F / num_run;
-% 
-% %% Convergence rate
-% 
-% num_trials = 0;
-% 
-% for i=1:num_run
-%     num_trials = num_trials + ris(i).num_trials;
-% end
-% 
-% struct.all.effect_conv = num_run/num_trials;
 
