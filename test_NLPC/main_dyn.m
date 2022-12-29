@@ -2,15 +2,16 @@ clc
 clear
 close all
 
-% Here we use the dynamic approach for computing equilibria using the points
-% x0_all as initial conditions. We have used the same points for computing the
-% results saved in 'png_ort_phys_testproj.m' and 'png_phys_testproj.m' even though
-% in that case those vectors didn't lead the algorithm to convergence.
+% Here we use the dynamic approach for computing equilibria using the 
+% points x0_all as initial conditions. For comparison purposes, we have 
+% used the same points for as initial point of NLPC method 
+% in 'main_NLPC.m' and 'main_NLPC_orthogonal.m' even though in that case
+% some of those vectors didn't lead the algorithm to convergence.
 % Those starting points have been selected with 'main_extract_x0.m'.
 
 addpath(fullfile('..', 'funcs'))
 
-do_phys = 0;
+do_phys = 1;
 do_mutation = 1;
 
 %% Step1. Define path and load
@@ -31,7 +32,7 @@ rates_phys = CRN.rates.std_values;
 max_t = 2.5*10^7;
 perc = 0;
 
-lof_mutations = {'TBRII', 'SMAD4', 'Cadh', 'APC', 'PTEN', 'AKT', 'ARF'};
+lof_mutations = {'APC', 'AKT', 'SMAD4',  'PTEN'};
 gof_mutations = { 'Ras', 'Raf', 'PI3K', 'BetaCatenin'};
 lof_mutations_type2 = {'TP53'};
 all_mutations = [gof_mutations, lof_mutations, lof_mutations_type2];
@@ -63,7 +64,7 @@ for ir = 1:n_runs
 end
 
 % 3.3. Save results
-save('dyn_phys.mat', 'dyn_phys', 'x0_all')
+save(fullfile(folder_results, 'dyn_phys.mat'), 'dyn_phys', 'x0_all')
 
 clear x0_all dyn_phys n_runs
  
