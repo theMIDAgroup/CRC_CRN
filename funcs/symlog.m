@@ -96,7 +96,7 @@ end
 C = 10^C;
 
 % Axes must be in linear scaling
-set(ax,[var,'Scale'],'linear')
+% set(ax,[var,'Scale'],'linear')
 
 % Check for existing transformation
 userdata = get(ax,'UserData');
