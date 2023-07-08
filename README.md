@@ -1,6 +1,6 @@
 # CRC_CRN
 
-Matlab code for evaluating the effects of two classes of mutations in a chemical reaction network modeling the G1-S transition phase of a colorectal cancer cell.
+Matlab code for the in-silico simulation of the effects of mutations and targeted therapies in a chemical reaction network modeling the G1-S transition phase of a colorectal cancer cell.
 
 We also provide the implementation of the NLPC (non-linearly projected combined) method, a fast and globally convergent combined Newton and gradient descent method for computing equilibrium points of chemical reaction networks.
 
