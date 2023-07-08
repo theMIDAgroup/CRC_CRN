@@ -10,6 +10,8 @@ The code allows to reproduce the results shown in
 
 * Berra, S., La Torraca, A., Benvenuto, F., Sommariva, S., A fast and convergent combined Newton and gradient descent method for computing steady states of chemical reaction networks, submitted.
 
+* Sommariva, S., Berra, S., Biddau, G., Caviglia, G., Benvenuto, F., Piana, M., In-silico modelling of the mitogen-activated protein kinase (MAPK) pathway in colorectal cancer: mutations and targeted therapy, submitted.
+
 # For reproducing results from Sommariva et al. 2021:
 
 Code is written in Matlab R2015b.
@@ -30,6 +32,13 @@ To reproduce the analysis of the paper, run:
 * ./test_NLPC/main_NLPC.m and ./test_NLPC/main_NLPC_orthogonal.m to run NLPC with the proposed non linear projector and the classical orthogonal projector, respectively
 * ./test_NLPC/main_dyn.m to compute the steady states with a classical ODEs solver.
 
+# For reproducing results from Sommariva et al. submitted:
+
+Code is written in Matlab R2017b.
+Results of the simulations are provided in the folder './test_MAPK/results_paper'.
+
+To reproduce the figures of the paper, run ./test_MAPK/script_figure_\*.m .
+To reproduce the analysis of the paper, run the m-files ./test_MAPK/main_\*.m .The scope of each script is extensively described therein.
 
 # External packages:
 
