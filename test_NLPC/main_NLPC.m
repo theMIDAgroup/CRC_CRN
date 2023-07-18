@@ -15,13 +15,15 @@ addpath(fullfile('..', 'funcs'))
 
 do_phys = 1;
 do_mutation = 1; perc = 0;
+BB_option = 1; % Whether to use the Barziali-Borwein-inspired method
+	       % to normalize the gradient
 
 %% Step1. Define path and load
 target = fullfile('..', 'data');
 
 path_mim = fullfile(target, 'CRC_CRN_nodrug.mat');
-folder_st_points = './results/starting_points';
-folder_results = './results/';
+folder_st_points = '../results_paper/starting_points';
+folder_results = './results_paper/';
 file_x0_phys = fullfile(folder_st_points, 'x0_phys.mat');
 aux_file_x0_mut = 'x0_%s.mat';
 
@@ -61,8 +63,14 @@ n_runs = size(x0_all, 2);
 for ir = 1:n_runs
     fprintf('Physiological run = %d \n', ir)
     time_init = tic;
-    aux_phys = f_NLPC_restart(x0_all(:, ir), rates_phys, S_phys, Nl, ...
-        rho_phys, idx_basic_species, v, ind_one, max_counter, 0);
+    switch BB_option
+        case 1
+            aux_phys = f_NLPC_BB_restart(x0_all(:, ir), rates_phys, S_phys, Nl, ...
+                rho_phys, idx_basic_species, v, ind_one, max_counter, 1);
+        otherwise
+            aux_phys = f_NLPC_restart(x0_all(:, ir), rates_phys, S_phys, Nl, ...
+                rho_phys, idx_basic_species, v, ind_one, max_counter, 1);
+    end
     aux_phys.elapse_time = toc(time_init);
     nlpc_phys(ir) = aux_phys;
 
@@ -70,7 +78,12 @@ for ir = 1:n_runs
 end
 
 % 3.4. Save
-save(fullfile(folder_results, 'nlpc_phys.mat'), 'nlpc_phys');
+switch BB_option
+	case 1
+	    save(fullfile(folder_results, 'nlpc_bb_phys.mat'), 'nlpc_phys');
+	otherwise
+	    save(fullfile(folder_results, 'nlpc_phys.mat'), 'nlpc_phys');
+end
 clear nlpc_phys_aml x0_all rates_phys S_phys rho_phys n_runs
 
 end
@@ -97,17 +110,28 @@ for im = 1:n_mutations
     for ir = 1:n_runs
         fprintf('Mutation %s run = %d \n', protein, ir)
         time_init = tic;
-        aux_mut = f_NLPC_restart(x0_all(:, ir), rates_mut, S_mut, Nl, ...
-            rho_mut, idx_basic_species, v, ind_one, max_counter, 0);
-        aux_mut.elapse_time = toc(time_init);
+        switch BB_option
+            case 1
+                aux_mut = f_NLPC_BB_restart(x0_all(:, ir), rates_mut, S_mut, Nl, ...
+                    rho_mut, idx_basic_species, v, ind_one, max_counter, 0);
+            otherwise
+                aux_mut = f_NLPC_restart(x0_all(:, ir), rates_mut, S_mut, Nl, ...
+                    rho_mut, idx_basic_species, v, ind_one, max_counter, 0);
+        end
+                aux_mut.elapse_time = toc(time_init);
         nlpc_mut(ir) = aux_mut;
         clear aux_mut tim_init
     end
 
     % 4.4. Save
-    save(fullfile(folder_results, ...
-        sprintf('nlpc_mut_%s.mat', protein)), 'nlpc_mut', 'x0_all')
-
+    switch BB_option
+	case 1
+    	    save(fullfile(folder_results, ...
+         	sprintf('nlpc_mut_%s.mat', protein)), 'nlpc_mut', 'x0_all')
+	otherwise
+    	    save(fullfile(folder_results, ...
+         	sprintf('nlpc_bb_mut_%s.mat', protein)), 'nlpc_mut', 'x0_all')
+    end
     clear protein nlpc_mut x0_all rates_mut rho_mut par n_runs
 
 end
