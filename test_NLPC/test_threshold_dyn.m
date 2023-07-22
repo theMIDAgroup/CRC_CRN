@@ -7,7 +7,7 @@ test_max_t = 0;
 %% Path, folder & load
 addpath(fullfile('..', 'funcs'))
 target = fullfile('..', 'data');
-folder_results = fullfile('./results_paper', 'additional_results');
+folder_results = fullfile('.');
 folder_results_paper = './results_paper';
 aux_file_results = 'test_dyn_threshold_%d.mat';
 
@@ -32,7 +32,7 @@ ind_one = size(CRN.matrix.S, 1) + 1;
 %% a larger time interval
 if test_max_t
     
-max_t_all = [2.5*10^9]; n_runs = size(max_t_all, 2)
+max_t_all = [2.5*10^9]; n_runs = size(max_t_all, 2);
 ix = 1; x0_dyn = x0_all(:, ix);
 
 fprintf('Initial point = %d \n', ix)
@@ -88,20 +88,23 @@ set(gca, 'Fontsize', 15)
 
 subplot(2, 1, 2)
 semilogx(ris.time, ris.sol(aux_p, :), 'k', 'linewidth', 3)
+hold on
+rectangle('Position', [0.75*10^8, 8.4*10^-5, ris.time(end)-0.8*10^8, 0.8*10^-5], ...
+    'EdgeColor', 'red', 'Linewidth', 2)
 xlim([t_min, ris.time(end)])
 xlabel('Time t [s]')
 ylabel({'Concentration', sprintf('%s', CRN.species.names{aux_p})}, ...
     'Interpreter', 'Latex')
 set(gca, 'Fontsize', 15)
 grid on
-saveas(f_max_t, fullfile(folder_figures, 'test_threshold_dyn.jpg'))
+saveas(f_max_t, fullfile(folder_results, 'test_threshold_dyn.jpg'))
 
 
 f_zoom = figure('units','normalized','outerposition',[0 0 0.35 0.15]);
 semilogx(ris.time, ris.sol(aux_p, :), 'k', 'linewidth', 3)
 xlim([0.8*10^8, ris.time(end)])
 set(gca, 'Fontsize', 15)
-saveas(f_zoom, fullfile(folder_figures, 'test_threshold_dyn_zoom.jpg'))
+saveas(f_zoom, fullfile(folder_results, 'test_threshold_dyn_zoom.jpg'))
 
 
 
