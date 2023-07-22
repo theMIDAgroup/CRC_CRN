@@ -31,6 +31,7 @@ To reproduce the analysis of the paper, run:
 * ./test_NLPC/main_extract_x0.m to sample the initial points for NLPC.
 * ./test_NLPC/main_NLPC.m and ./test_NLPC/main_NLPC_orthogonal.m to run NLPC with the proposed non linear projector and the classical orthogonal projector, respectively
 * ./test_NLPC/main_dyn.m to compute the steady states with a classical ODEs solver.
+To reproduce the analysis in the Online resource, run ./test_NLPC/test_\*.m
 
 # For reproducing results from Sommariva et al. submitted:
 
