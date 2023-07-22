@@ -1,4 +1,4 @@
-function  ris = f_NLPC_BB_restart_tries(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
+function  ris = f_NLPC_BB_restart(x_0, rate_constants, S, Nl, rho, idx_basic_species, ...
     v, ind_one, max_counter, proj)
 
 % Function implementing the Non-Linearly Projected Combined (NLPC)
@@ -258,6 +258,10 @@ if (counter == max_counter) && (norm_F_x_new > tol)
     ir = ir+1; 
     FLAG = 0;
     clear upd_components cond_number zeri flag_save
+    if ir == num_try
+        warning(['The algorithm did not converge within the allowed number of iterations and restarts. ' ...
+            'Results may be inaccurate and the problem may not have a solution.'])
+    end
 else
     % Step 6. Store results over run
     ris.x0 = x_0;
