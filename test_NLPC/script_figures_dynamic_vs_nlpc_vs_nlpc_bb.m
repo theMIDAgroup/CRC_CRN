@@ -306,6 +306,8 @@ title('\textbf{NLPC}', 'Interpreter','latex')
 xlabel ('Elapsed time [sec]', 'Interpreter', 'Latex');
 ylabel ('Accuracy - $||\textbf{f}(\textbf{x}_{nlpc})||$', 'Interpreter', 'Latex');
 set(gca, 'Fontsize', 20, 'TickLabelInterpreter','latex')
+axis tight
+yl = ylim; ylim([yl(1), 10^-12])
 
 subplot(2,2,2);
 line1 = semilogy(el_time_dyn_a, fxeq_dyn_a,'diamond', 'Linewidth', 1, 'Markersize', 10, ...
