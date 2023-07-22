@@ -24,6 +24,7 @@ Run main_script_\*.m to reproduce the results of the paper.
 
 Code is written in Matlab R2017b.
 Results of the simulations are provided in the folder './test_NLPC/results_paper'.
+
 The implementation of the NLPC methods can be found in './funcs/f_NLPC_restart.m'
 
 To reproduce the figures of the paper, run ./test_NLPC/script_figure_\*.m .
@@ -31,6 +32,7 @@ To reproduce the analysis of the paper, run:
 * ./test_NLPC/main_extract_x0.m to sample the initial points for NLPC.
 * ./test_NLPC/main_NLPC.m and ./test_NLPC/main_NLPC_orthogonal.m to run NLPC with the proposed non linear projector and the classical orthogonal projector, respectively
 * ./test_NLPC/main_dyn.m to compute the steady states with a classical ODEs solver.
+
 To reproduce the analysis in the Online resource, run ./test_NLPC/test_\*.m
 
 # For reproducing results from Sommariva et al. submitted:
