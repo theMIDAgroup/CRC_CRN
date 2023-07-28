@@ -1,0 +1,3 @@
+arrow	Flux_rate
+Raf + DBF <-> DBF_Raf	*Raf*DBF-	*DBF_Raf
+DBF -> null	*DBF
