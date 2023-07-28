@@ -9,11 +9,10 @@ addpath('./funcs')
 
 %% Step 1. Define input data
 % 1.1. Files and folders
-target_folder = '../data/ci_servono';
+target_folder = '../data/';
 folder_results = './results_paper';
 file_mim = fullfile(target_folder, 'CRC_CRN_nodrug.mat');
 file_ris_phys = fullfile(folder_results, 'nlpc_phys.mat');
-% folder_results_old = './results_NLPC';
 
 % 1.2. Define wich mutations to simulate
 all_combo = { {'PI3K', 'Ras'}, {'PTEN', 'Ras'}, {'Raf', 'PTEN'}, {'Raf', 'PI3K'}, {'Ras', 'PI3K'}, ....
@@ -24,7 +23,7 @@ all_perc_m2 = 0;
 max_counter = 500;
 
 %% Step 2. Load data
-load(file_mim, 'CMIM');
+load(file_mim, 'new_CMIM'); CMIM = new_CMIM; clear new_CMIM
 load(file_ris_phys, 'nlpc_phys')
 
 initial_condition = nlpc_phys(1).x; 

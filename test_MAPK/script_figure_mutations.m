@@ -19,7 +19,7 @@ set(0, 'defaultAxesTickLabelInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex'); 
 
 %% Path & Folders
-target_folder = '../data/ci_servono';
+target_folder = '../data/';
 folder_results = './results_paper';
 folder_figures = './figures_paper';
 file_species_names = fullfile(target_folder, 'CRC_CRN_species_names.mat');
@@ -40,7 +40,7 @@ for i=1:2
         case gof_mutations
             type_mut{i} = 'GoF';
     end
-    title_fig{i} = [type_mut{i}, ' ',  name_mut_prot{i}];
+    title_fig{i} = [type_mut{i}, '{\it ',  name_mut_prot{i}, '}'];
 end
 type_mut{3} = [type_mut{1}, '_' , type_mut{2}];
 type_mut{4} = [type_mut{2}, '_' , type_mut{1}];
@@ -58,7 +58,7 @@ for i=1:4
     switch(quantity{i})
         case 'single'
             file_mut_eq = fullfile(folder_results, 'mutations', ...
-                sprintf('nlpc_mut_%s.mat', mut_prot{i}));
+                sprintf('nlpc_mut_%s_perc_0.0.mat', name_mut_prot{i}));
             load(file_mut_eq, 'nlpc_mut');
             profile_mut(:, i) = nlpc_mut(1).x;
         case 'multi'
@@ -138,7 +138,7 @@ xlabel(' '+newline+' ')
 xlim([0, 420])
 
 ylabel('$\delta_i$', 'Fontsize', 30, 'Interpreter', 'Latex')
-t3 = title('(A) Partial GoF KRAS', 'Fontsize', 24);
+t3 = title('(A) Partial GoF{\it KRAS}', 'Fontsize', 24);
 t3.Units = 'Normalize'; 
 t3.Position(1) = 0;
 t3.HorizontalAlignment = 'left';
@@ -151,7 +151,7 @@ pos_lgd = get(lgd, 'Position');
 lgd.Position = [pos_lgd(1)+0.08 pos_lgd(2)+0.045 pos_lgd(3) pos_lgd(4)];
 set(sp, 'Position', pos ) ;
 saveas(f_mut_log, fullfile(folder_figures, ...
-   sprintf('mut_%s_%s.jpg', name_mut_prot{1}, name_mut_prot{2})))
+    sprintf('mut_%s_%s.jpg', name_mut_prot{1}, name_mut_prot{2})))
 
 %% Compute matrix x_eq
 x_eq = [x_eq_phys profile_mut(:,1:3)];
@@ -164,7 +164,7 @@ idx_title = {'(A)', '(B)', '(C)', '(D)', '(E)', '(F)', '(G)', '(H)'};
 n_sp = numel(species);
 status = {'phys', [type_mut{1}, ' ', name_mut_prot{1}], [type_mut{2}, ' ', name_mut_prot{2}],...
     [type_mut{1}, ' ', name_mut_prot{1}, ' + ', type_mut{2}, ' ', name_mut_prot{2}]};
-title_2 = {'         (A): k-Ras', ' (B): k-Ras\_GTP', '           (C): Raf', '      (D): p-Raf', '          (E): MEK',...
+title_2 = {'         (A): K-Ras', ' (B): K-Ras\_GTP', '         (C): B-Raf', '    (D): p-B-Raf', '          (E): MEK',...
     '   (F): p-p-MEK', '         (G): ERK', '  (H): p-p-ERK'};
 
 f_hist_species = figure('units','normalized','outerposition',[0 0 0.7 1.5]); 
@@ -177,6 +177,23 @@ for i=1:n_sp
     for j=1:4
         bar(j, x_eq(idx_species(i),j), 'FaceColor', bar_color(j,:), 'Displayname', status{j});
         hold on;
+    end
+    values = x_eq(idx_species(i),:);
+    if i>1
+        text(1:length(values), values', num2str(values', '%0.2f'),'HorizontalAlignment','center','VerticalAlignment','bottom'); 
+    else
+    text(1:length(values), values', num2str(values', '%0.2g'),'HorizontalAlignment','center','VerticalAlignment','bottom'); 
+    end
+    if i == 1
+        ylim([0, 10^-4])
+    elseif ismember(i, [2, 6, 8])
+        ylim([0, 100])
+    elseif ismember(i, [5, 7])
+        ylim([0 220])
+    elseif i == 3
+        ylim([0, 60])
+    elseif i == 4
+        ylim([0, 6])
     end
     set(gca, 'xtick', 1:4, 'xticklabel', ' ',  ...
         'Fontsize', 20, ...
@@ -192,7 +209,6 @@ for i=1:n_sp
         ylabel('Concentration [nM]', 'Fontsize', 19, 'Interpreter', 'Latex')
     end
 end
-grid on
 lgd = legend('show');
 newPosition = [0.43 0.23 0.2 0.25];
 set(lgd,'Position', newPosition, 'orientation', 'horizontal');
