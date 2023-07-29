@@ -21,16 +21,17 @@ set(0, 'defaultLegendInterpreter','latex');
 
 %% Step 1. Define general parameters
 % 1.1. Mutation and drug
-mut_prot = 'Ras';
+mut_prot = 'Ras'; prot_name = 'KRAS'; perc = 0;
 drugs = {'DBF', 'TMT'};
 
 % 1.2. Files and folders
-target_folder = '../data/ci_servono';
+target_folder = '../data';
 folder_results = './results_paper';
 folder_figures = './figures_paper';
 file_species_names = fullfile(target_folder, 'CRC_CRN_species_names.mat');
 file_ris_phys = fullfile(folder_results, 'nlpc_phys.mat');
-file_ris_mut = fullfile(folder_results, sprintf('nlpc_mut_%s.mat', mut_prot));
+file_ris_mut = fullfile(folder_results, ...
+    'mutations', sprintf('nlpc_mut_%s_perc_%1.1f.mat', prot_name, perc));
 
 %% Step 2. Load and store data model.
 % 2.1. Load and store
@@ -48,10 +49,12 @@ for j=1:numel(drugs)
         n_new_species = 2;
         init_drug_all1 = linspace(0, 100, 11); init_drug_all1 = init_drug_all1(2:end);
         init_drug_all2 = [75, 55, 43.5, 25];
+        conc_name = 'c_D';
     elseif strcmp(drug, 'TMT')
         n_new_species = 3;
         init_drug_all1 = linspace(0, 2000, 11); init_drug_all1 = init_drug_all1(2:end);
         init_drug_all2 = [1400, 1080, 700, 300];
+        conc_name = 'c_T';
     else
     end
     init_drug_all = [init_drug_all1 init_drug_all2];
@@ -88,7 +91,7 @@ for j=1:numel(drugs)
         plot(init_drug_all2(id), geom_delta_combo(numel(init_drug_all1)+id), '*', 'LineWidth', 2, 'Markersize', 10, 'Color', colors{id});
     end
     title('(A)', 'HorizontalAlignment', 'left', 'position', [1.5 0.2025])
-    xlabel ('Concentration of DBF [nM]', 'Fontsize', 20, 'Interpreter', 'Latex')
+    xlabel (sprintf('Concentration of %s [nM]', drug), 'Fontsize', 20, 'Interpreter', 'Latex')
     t = '$G(\mathbf{d})$';
     ylabel (t, 'Fontsize', 20, 'Interpreter', 'Latex')
     set(gca, 'TickLabelInterpreter', 'latex', 'Fontsize', 20)
@@ -103,11 +106,16 @@ for j=1:numel(drugs)
     aux_sp = subplot(1,3,2:3);
     for id = 1:n_d
         init_drug = init_drug_all2(id);
+        if strcmp(drug, 'DBF')
         plot(1:n_species, delta_combo_sort(:, numel(init_drug_all1)+id), markers{id}', 'Linewidth', 2, ...
-            'Markersize', 8, 'Displayname', sprintf('$c_D = %2.1f$ nM', init_drug))
+            'Markersize', 8, 'Displayname', sprintf('$%s = %2.1f$ nM', conc_name, init_drug))
+        elseif strcmp(drug, 'TMT')
+        plot(1:n_species, delta_combo_sort(:, numel(init_drug_all1)+id), markers{id}', 'Linewidth', 2, ...
+            'Markersize', 8, 'Displayname', sprintf('$%s = %2.0f$ nM', conc_name, init_drug))
+        end
         hold on
     end
-    plot(1:n_species, delta_mut_sort, 'k', 'Linewidth', 3, 'Displayname', 'GoF KRAS') 
+    plot(1:n_species, delta_mut_sort, 'k', 'Linewidth', 3, 'Displayname', 'GoF {\it KRAS}') 
     title('(B)', 'HorizontalAlignment', 'left', 'position', [1.5 5.1])
     my_symlog('y')
     xlabel('Proteins $i$', 'Fontsize', 20, 'Interpreter', 'Latex')
@@ -121,5 +129,5 @@ for j=1:numel(drugs)
     set(aux_sp, 'Position', new_pos1) ;
 
     %% Step 6. Save
-    saveas(f_error, fullfile(folder_figures, sprintf('full_performance_%s.jpg', drug)))
+     saveas(f_error, fullfile(folder_figures, sprintf('full_performance_%s.jpg', drug)))
 end

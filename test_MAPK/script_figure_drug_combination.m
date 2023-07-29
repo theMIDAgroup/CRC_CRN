@@ -21,16 +21,17 @@ set(0, 'defaultLegendInterpreter','latex');
 
 %% Step 1. Define general parameters
 % 1.1. Starting mutation 
-mut_prot = 'Ras';
+mut_prot = 'Ras'; prot_name = 'KRAS'; perc = 0;
 drug1 = 'DBF'; drug2 = 'TMT'; drug = strcat(drug1, '_', drug2);
 
 % 1.2. Files and folders
-target_folder = '../data/ci_servono';
+target_folder = '../data/';
 folder_results = './results_paper';
 folder_figures = './figures_paper';
 file_species_names = fullfile(target_folder, 'CRC_CRN_species_names.mat');
 file_ris_phys = fullfile(folder_results, 'nlpc_phys.mat');
-file_ris_mut = fullfile(folder_results, sprintf('nlpc_mut_%s.mat', mut_prot));
+file_ris_mut = fullfile(folder_results, ...
+    'mutations', sprintf('nlpc_mut_%s_perc_%1.1f.mat', prot_name, perc));
 
 %% Step 2. Load and store data model
 % 2.1. Load and store
@@ -125,13 +126,13 @@ aux_sp = subplot(1,3,2:3);
 for id = 1:n_p1
     plot(1:n_species, delta_combo_sort(:, id), markers{id}', 'Linewidth', 2, ...
         'Markersize', 8,'Displayname', ...
-        sprintf('$c_{D} = %d$ nM, $c_{T} = %d$ nM', init_DBF_all2(id), ...
-        init_TMT_all2(id)))
+        sprintf('$c_{T} = %d$ nM, $c_{D} = %d$ nM', ...
+        init_TMT_all2(id), init_DBF_all2(id)))
     hold on
 end
 botAxs = gca;
 plot(1:n_species, delta_mut_sort, 'k', 'Linewidth', 3, ...
-    'Displayname', 'GoF KRAS') 
+    'Displayname', 'GoF {\it KRAS}') 
 my_symlog('y')
 title('(B)', 'HorizontalAlignment', 'left', 'position', [5 5.1], 'Fontsize', 20)
 xlabel('Proteins $i$', 'Fontsize', 20, 'Interpreter', 'Latex')

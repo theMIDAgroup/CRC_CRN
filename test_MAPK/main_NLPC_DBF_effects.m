@@ -9,8 +9,8 @@ addpath(fullfile('../funcs'))
 
 %% Step 1. Define general parameters
 % 1.1. Data
-target_folder = '../data/ci_servono';
-file_mim_clean = fullfile(target_folder, 'CRC_CRN_nodrug.mat');
+target_folder = '../data';
+file_mim_clean = fullfile(target_folder, 'CRC_CRN_nodrug_complete.mat');
 
 % 1.2. Folders and files
 folder_results = './results_paper';
