@@ -19,7 +19,7 @@ set(0, 'defaultLegendInterpreter','latex');
 
 %% Step 1. Define general parameters
 % 1.1. Starting mutation 
-mut_prot = 'Ras';
+mut_prot = 'Ras'; mut_prot_name = 'KRAS'; perc = 0;
 drug1 = 'DBF';
 drug2 = 'TMT';
 drug = strcat(drug1, '_', drug2);
@@ -30,12 +30,12 @@ n_d = numel(init_drug_all1);
 % 1.2. Files and folders
 folder_results = './results_paper';
 folder_figures = './figures_paper';
-target_folder = '../data/ci_servono';
+target_folder = '../data';
 file_species_names = fullfile(target_folder, 'CRC_CRN_species_names.mat');
 file_ris_phys = fullfile(folder_results, 'nlpc_phys.mat');
-file_ris_mut = fullfile(folder_results, ...
-                sprintf('nlpc_mut_%s.mat', mut_prot));
-file_mim = fullfile(target_folder, 'CRC_CRN_nodrug.mat');
+file_ris_mut = fullfile(folder_results, 'mutations', ...
+                sprintf('nlpc_mut_%s_perc_%1.1f.mat', mut_prot_name, perc));
+file_mim = fullfile(target_folder, 'CRC_CRN_nodrug_complete.mat');
 
 %% Step 2. Load and store data model
 load(file_species_names, 'species_names');
@@ -122,5 +122,5 @@ set(lgd,'position', [poshL(1)-0.07, poshL(2), poshL(3)*0.6, poshL(4)], 'Interpre
 set(gcf, 'PaperPositionMode', 'auto');
 
 %% Save
-saveas(f_dyn_p1, fullfile(folder_figures, 'dyn_ppERK_DBF_deg.jpg'))
+% saveas(f_dyn_p1, fullfile(folder_figures, 'dyn_ppERK_DBF_deg.jpg'))
 

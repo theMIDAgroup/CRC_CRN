@@ -10,8 +10,8 @@ addpath(fullfile('../funcs'))
 
 %% Step 1. Define general parameters
 % 1.1. Data
-target_folder = '../data/ci_servono';
-file_mim = fullfile(target_folder, 'CRC_CRN_nodrug.mat');
+target_folder = '../data';
+file_mim = fullfile(target_folder, 'CRC_CRN_nodrug_complete.mat');
 
 % 1.2. Folders and files
 folder_results = './results_paper';
@@ -148,7 +148,7 @@ for ip = 1:numel(perc_all)
 
             ris_drug.CMIM_drug = CMIM_drug;
             
-            aux_save = sprintf('prova_dyn_%s_on_mut_%s_%2.2f_%2.2f.mat', drug, mut_prot, ...
+            aux_save = sprintf('dyn_%s_on_mut_%s_%2.2f_%2.2f.mat', drug, mut_prot, ...
                 init_drug1, init_drug2);
             save(fullfile(folder_results, 'drugs', aux_save), 'ris_drug')
 

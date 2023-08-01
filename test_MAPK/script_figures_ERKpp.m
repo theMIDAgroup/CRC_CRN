@@ -31,13 +31,13 @@ init_drug_all2 = [200, 150, 100, 50];
 n_d = numel(init_drug_all1);
 
 % 1.2. Files and folders
-folder_results = './results_paper';
+folder_results = './results_paper'; %togliere old
 folder_figures = './figures_paper';
-folder_data = '../data/ci_servono';
-file_mim = fullfile(folder_data, 'CRC_CRN_nodrug.mat');
+folder_data = '../data';
+file_mim = fullfile(folder_data, 'CRC_CRN_nodrug_complete.mat');
 file_species_names = fullfile(folder_data, 'CRC_CRN_species_names.mat');
 file_ris_phys = fullfile(folder_results, 'nlpc_phys.mat');
-file_ris_mut = fullfile(folder_results, 'nlpc_mut_Ras.mat');
+file_ris_mut = fullfile(folder_results, 'mutations', 'nlpc_mut_KRAS_perc_0.0.mat');
 
 %% Step 2. Load and store data model.
 load(file_species_names, 'species_names');
@@ -112,7 +112,7 @@ DBF_TMT_delta_combo = zeros(n_species, numel(init_drug_all1), numel(init_drug_al
 
 for i=1:4
     file_ris_drug = fullfile(folder_results, 'drugs',...
-        sprintf('prova_dyn_%s_%s_on_mut_%s_%2.2f_%2.2f.mat', ...
+        sprintf('dyn_%s_%s_on_mut_%s_%2.2f_%2.2f.mat', ...
         drug1,  drug2, mut_prot, init_drug_all1(i), init_drug_all2(i)));
     load(file_ris_drug, 'ris_drug')
     DBF_TMT_dynamics{i} = ris_drug.x_t_mut_drug;
@@ -242,5 +242,5 @@ set(lgd,'position', [poshL(1), poshL(2), poshL(3)*0.6, poshL(4)], 'Interpreter',
 set(gcf, 'PaperPositionMode', 'auto');
 
 %% Save
-saveas(f_dyn_p1, fullfile(folder_figures, 'dyn_ppERK.jpg'))
+% saveas(f_dyn_p1, fullfile(folder_figures, 'dyn_ppERK.jpg'))
 

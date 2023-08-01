@@ -69,12 +69,12 @@ for ip = 1:numel(perc_all)
     k4_drug = k2_drug; k5_drug = k1_drug; k6_drug = 1.184 * 1e-2;
     k = [k1_drug k2_drug k3_drug k4_drug k5_drug k6_drug];
     
-    [~, idx_k1] = ismember('cd_3', CMIM_drug.rates.names);
-    [~, idx_k2] = ismember('cd_4', CMIM_drug.rates.names);
-    [~, idx_k3] = ismember('cd_5', CMIM_drug.rates.names);
-    [~, idx_k4] = ismember('cd_6', CMIM_drug.rates.names);
-    [~, idx_k5] = ismember('cd_7', CMIM_drug.rates.names);
-    [~, idx_k6] = ismember('cd_8', CMIM_drug.rates.names);
+    [~, idx_k1] = ismember('cd_1', CMIM_drug.rates.names);
+    [~, idx_k2] = ismember('cd_2', CMIM_drug.rates.names);
+    [~, idx_k3] = ismember('cd_3', CMIM_drug.rates.names);
+    [~, idx_k4] = ismember('cd_4', CMIM_drug.rates.names);
+    [~, idx_k5] = ismember('cd_5', CMIM_drug.rates.names);
+    [~, idx_k6] = ismember('cd_6', CMIM_drug.rates.names);
     idx_k = [idx_k1 idx_k2 idx_k3 idx_k4 idx_k5 idx_k6];
     
     %   3.3. Drug initial value
