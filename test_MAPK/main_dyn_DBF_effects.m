@@ -7,12 +7,13 @@ close all
 
 addpath(fullfile('../funcs'))
 
-drug_deg = 1;
+drug_deg = 0;
+% Set equal to 1 in order to use the model with degradation of DBF.
 
 %% Step 1. Define general parameters
 % 1.1. Data
-target_folder = '../data/ci_servono';
-file_mim = fullfile(target_folder, 'CRC_CRN_nodrug.mat');
+target_folder = '../data';
+file_mim = fullfile(target_folder, 'CRC_CRN_nodrug_complete.mat');
 
 % 1.2. Folders and files
 folder_results = './results_paper';
@@ -29,7 +30,8 @@ max_t = 5*10^7;
 load(file_mim, 'CMIM');
 load(file_ris_phys, 'nlpc_phys')
 
-x_eq_phys = nlpc_phys(1).x;
+% x_eq_phys = nlpc_phys(1).x;
+x_eq_phys = nlpc_phys.x; 
 rate_constants_phys = CMIM.rates.std_values;
 
 %% Step 3. Add drug and define drug parameters
@@ -157,7 +159,7 @@ for id = 1:numel(init_drug_all)
         init_drug_all(id));
     end
     
-%     save(fullfile(folder_results, 'drugs', aux_save), 'ris_drug')
+    save(fullfile(folder_results, 'drugs', aux_save), 'ris_drug')
     
     clearvars -except target_folder folder_results max_t perc mut_prot ...
         perc_all init_drug_all k1_drug k2_drug k3_drug idx_k1 idx_k2 idx_k3 idx_d ...

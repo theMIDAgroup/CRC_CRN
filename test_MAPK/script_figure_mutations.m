@@ -162,8 +162,8 @@ name_species = {'KRAS', 'k-Ras_GTP', 'Raf', 'p-Raf', 'MEK', 'p-p-MEK', 'ERK', 'p
 idx_title = {'(A)', '(B)', '(C)', '(D)', '(E)', '(F)', '(G)', '(H)'};
 [~, idx_species] = ismember(species, species_names);
 n_sp = numel(species);
-status = {'phys', [type_mut{1}, ' ', name_mut_prot{1}], [type_mut{2}, ' ', name_mut_prot{2}],...
-    [type_mut{1}, ' ', name_mut_prot{1}, ' + ', type_mut{2}, ' ', name_mut_prot{2}]};
+status = {'phys', [type_mut{1}, '{\it ', name_mut_prot{1}, '} '], [type_mut{2}, ' {\it ', name_mut_prot{2}, '}' ],...
+    [type_mut{1}, '{\it ', name_mut_prot{1}, '} ', ' + ', type_mut{2}, '{\it ', name_mut_prot{2}, '} ']};
 title_2 = {'         (A): K-Ras', ' (B): K-Ras\_GTP', '         (C): B-Raf', '    (D): p-B-Raf', '          (E): MEK',...
     '   (F): p-p-MEK', '         (G): ERK', '  (H): p-p-ERK'};
 

@@ -66,7 +66,8 @@ function [CRN, N] = f_add_drug_Raf_from_file(CRN, drug)
     if (drug == 'DBF')
         s = j;
     elseif (drug == 'TMT')
-        s = 3;
+        % s = 3;
+        s = length(CRN.reactions.details) - 851 + 1;
     end
     
     for i=1:length(file_reactions1{1})
