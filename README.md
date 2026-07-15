@@ -8,9 +8,9 @@ The code allows to reproduce the results shown in
 
 * Sommariva, S., Caviglia, G., Ravera, S., Frassoni, F., Benvenuto, F., Tortolina, L., Castagnino, N., Parodi, S., Piana, M. (2021) Computational quantification of global effects induced by mutations and drugs in signaling networks of colorectal cancer cells. Scientific reports 11(1), 1-13
 
-* Berra, S., La Torraca, A., Benvenuto, F., Sommariva, S., A fast and convergent combined Newton and gradient descent method for computing steady states of chemical reaction networks, submitted.
+* Berra, S., La Torraca, A., Benvenuto, F., Sommariva, S. (2024) Combined newton-gradient method for constrained root-finding in chemical reaction networks. Theory and Applications, 200(1):404-427
 
-* Sommariva, S., Berra, S., Biddau, G., Caviglia, G., Benvenuto, F., Piana, M., In-silico modelling of the mitogen-activated protein kinase (MAPK) pathway in colorectal cancer: mutations and targeted therapy, submitted.
+* Sommariva, S., Berra, S., Biddau, G., Caviglia, G., Benvenuto, F., Piana, M. (2023) In-silico modelling of the mitogen-activated protein kinase (MAPK) pathway in colorectal cancer: mutations and targeted therapy. Frontiers in Systems Biology 3, 1207898.
 
 # For reproducing results from Sommariva et al. 2021:
 
@@ -20,7 +20,7 @@ Results of the simulations are provided in the folder './results'.
 Run script_fig_\*.m to reproduce the figures of the paper. 
 Run main_script_\*.m to reproduce the results of the paper.
 
-# For reproducing results from Berra et al. submitted:
+# For reproducing results from Berra et al. 2024:
 
 Code is written in Matlab R2017b.
 Results of the simulations are provided in the folder './test_NLPC/results_paper'.
@@ -35,7 +35,7 @@ To reproduce the analysis of the paper, run:
 
 To reproduce the analysis in the Online resource, run ./test_NLPC/test_\*.m
 
-# For reproducing results from Sommariva et al. submitted:
+# For reproducing results from Sommariva et al. 2023:
 
 Code is written in Matlab R2017b.
 Results of the simulations are provided in the folder './test_MAPK/results_paper'.
